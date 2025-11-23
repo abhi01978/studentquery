@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-900 text-white p-4">
+
+  <!-- PROFILE CONTAINER -->
+  <div class="max-w-xl mx-auto bg-gray-800/40 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/10 mt-6">
+
+    <h1 class="text-3xl font-bold mb-6 text-center">Student Profile</h1>
+
+    <!-- PROFILE IMAGE -->
+    <div class="flex flex-col items-center mb-6">
+      <img id="profileImg" class="w-28 h-28 rounded-full object-cover border-4 border-blue-500 shadow-lg" src="" alt="Profile" />
+      <h2 id="name" class="text-2xl font-semibold mt-3"></h2>
+      <p id="dream" class="text-gray-300 text-sm"></p>
+    </div>
+
+    <!-- DETAILS GRID -->
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">Phone</p>
+        <p id="phone" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">Board</p>
+        <p id="board" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">University</p>
+        <p id="university" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">College</p>
+        <p id="college" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">Course</p>
+        <p id="course" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl">
+        <p class="text-gray-400">Semester</p>
+        <p id="semester" class="font-semibold"></p>
+      </div>
+
+      <div class="p-3 bg-gray-700/40 rounded-xl col-span-2">
+        <p class="text-gray-400">Class</p>
+        <p id="className" class="font-semibold"></p>
+      </div>
+    </div>
+
+    <!-- LOGOUT BUTTON -->
+    <button id="logoutBtn" class="w-full mt-6 py-3 bg-red-600 hover:bg-red-700 transition rounded-xl font-semibold">Logout</button>
+
+  </div>
+
+
+<script>
+  async function loadProfile() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Login first");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const res = await fetch("http://localhost:5000/api/me", {
+      headers: { "Authorization": token }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert("Session expired, login again");
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const user = data.user;
+
+    // Fill UI
+    document.getElementById("profileImg").src = user.profileImg ? `http://localhost:5000/uploads/${user.profileImg}` : "https://i.ibb.co/2y9g7Yt/user.png";
+
+    document.getElementById("name").textContent = user.name;
+    document.getElementById("dream").textContent = user.dream || "";
+
+    document.getElementById("phone").textContent = user.phone;
+    document.getElementById("board").textContent = user.board || "-";
+    document.getElementById("university").textContent = user.university || "-";
+    document.getElementById("college").textContent = user.college || "-";
+    document.getElementById("course").textContent = user.course || "-";
+    document.getElementById("semester").textContent = user.semester || "-";
+    document.getElementById("className").textContent = user.className || "-";
+  }
+
+  // Logout
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  });
+
+  loadProfile();
+</script>
+
+</body>
+</html>

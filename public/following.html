@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Following List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-md mx-auto bg-white min-h-screen">
+    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-6 sticky top-0 z-10">
+      <div class="flex items-center justify-between">
+        <button onclick="history.back()" class="text-white"><i class="fas fa-arrow-left text-xl"></i></button>
+        <h1 id="listTitle" class="text-xl font-bold">Following</h1>
+        <div></div>
+      </div>
+    </div>
+
+    <div id="usersList" class="p-4 space-y-3">
+      <p class="text-center text-gray-500 py-10">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) window.location.href = "login.html";
+
+    const type = localStorage.getItem("viewListType") || "following";
+    document.getElementById("listTitle").textContent = type === "followers" ? "Followers" : "Following";
+
+    async function loadList() {
+      try {
+        const res = await fetch("https://studentquery.onrender.com/api/users", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const allUsers = data.users || [];
+        const meRes = await fetch("https://studentquery.onrender.com/api/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const meData = await meRes.json();
+        const myId = meData.user._id;
+
+        const container = document.getElementById("usersList");
+        container.innerHTML = "";
+
+        let targetUsers = [];
+
+        if (type === "following") {
+          const myFollowing = meData.user.following || [];
+          targetUsers = allUsers.filter(u => myFollowing.includes(u._id));
+        } else {
+          targetUsers = allUsers.filter(u => u.following && u.following.includes(myId));
+        }
+
+        if (targetUsers.length === 0) {
+          container.innerHTML = `<p class="text-center text-gray-500 py-10">Koi nahi hai</p>`;
+          return;
+        }
+
+        targetUsers.forEach(user => {
+          const display = user.course && user.semester ? `${user.course} • ${user.semester} Sem` 
+                         : user.board ? user.board + " Board" : "Student";
+          container.innerHTML += `
+            <div onclick="openUserProfile('${user._id}')" class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-2xl hover:shadow-md transition cursor-pointer">
+              <div class="flex items-center gap-4">
+                <img src="${user.profileImg || 'https://i.ibb.co/2y9g7Yt/user.png'}" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200"/>
+                <div>
+                  <div class="font-semibold">${user.name}</div>
+                  <div class="text-xs text-indigo-600">${display}</div>
+                </div>
+              </div>
+              <i class="fas fa-chevron-right text-gray-400"></i>
+            </div>
+          `;
+        });
+
+      } catch (err) {
+        document.getElementById("usersList").innerHTML = `<p class="text-center text-red-500">Error</p>`;
+      }
+    }
+
+    function openUserProfile(userId) {
+      localStorage.setItem("viewUserId", userId);
+      window.location.href = "userprofile.html";
+    }
+
+    loadList();
+  </script>
+</body>
+</html>

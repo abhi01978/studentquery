@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student News</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config to enable custom utilities if needed
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6C5CE7',
+            accent: '#00B894'
+          },
+          boxShadow: {
+            'neon-lg': '0 10px 30px rgba(108,92,231,0.25), 0 2px 6px rgba(0,0,0,0.12)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Extra styles for 3D effect and smoothness */
+    :root{ --card-w: 720px; }
+    html,body{ height:100%; }
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(108,92,231,0.12), transparent 8%),
+                  radial-gradient(900px 400px at 90% 90%, rgba(0,184,148,0.06), transparent 10%),
+                  linear-gradient(180deg,#0f172a 0%, #071029 100%);
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    .perspective{ perspective: 1400px; }
+    .scene{ transform-style: preserve-3d; transition: transform 0.15s ease-out; }
+    .card-3d{
+      transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+      transition: transform 0.12s cubic-bezier(.2,.9,.3,1), box-shadow 0.12s ease;
+      will-change: transform;
+    }
+
+    /* Glass effect */
+    .glass{ background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* floating animation */
+    @keyframes floaty{ 0%{ transform: translateY(0); } 50%{ transform: translateY(-8px);} 100%{transform: translateY(0);} }
+    .floaty{ animation: floaty 6s ease-in-out infinite; }
+
+    /* bottom nav safe area */
+    .bottom-safe{ padding-bottom: env(safe-area-inset-bottom, 12px); }
+
+    /* subtle icon badge */
+    .badge{ position: absolute; top: -6px; right: -6px; background: linear-gradient(90deg,#FF7A7A,#FFB86B); color: white; border-radius: 999px; font-size: 10px; padding: 3px 6px; }
+
+    /* responsive search height tweak */
+    @media (max-width: 640px){ :root{ --card-w: 92vw; } }
+    /* light mode override */
+    body.light-mode{
+      background:#f4f4f7 !important;
+      color:#111 !important;
+    }
+    body.light-mode .glass{background:rgba(0,0,0,0.03) !important; border-color:rgba(0,0,0,0.1) !important;}
+    body.light-mode input{background:rgba(0,0,0,0.05) !important; color:#111 !important;}
+  </style>
+</head>
+<body class="bg-gray-900 text-white p-2 min-h-screen">
+<!-- TOP NAVBAR -->
+  <header class="w-full z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="flex items-center justify-between py-3 px-2 sm:px-4 w-full overflow-x-auto">
+  <!-- Brand -->
+  <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+    <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-neon-lg">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M3 12c0-1.656 1.344-3 3-3h9" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+        <circle cx="17" cy="7" r="3" stroke="white" stroke-width="1.2" opacity="0.95"/>
+      </svg>
+    </div>
+    <div>
+      <div class="text-sm sm:text-lg font-semibold" id="topUserName">StudentDM</div>
+      <div class="text-xs text-slate-300 -mt-0.5">Next-level learning hub</div>
+    </div>
+  </div>
+
+  <!-- Right icons -->
+  <div class="flex items-center gap-1 sm:gap-3 flex-shrink-0 text-xs sm:text-sm">
+    <button id="themeToggle" class="p-1 sm:p-2 rounded-lg hover:bg-white/5 transition" title="Toggle theme">🌗</button>
+
+    <button class="relative p-1 sm:p-2 rounded-lg hover:bg-white/5 transition">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="opacity-95">
+        <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h11z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="badge text-[10px] absolute top-0 right-0">3</span>
+    </button>
+
+    <button class="p-1 sm:p-2 rounded-lg hover:bg-white/5 transition">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="opacity-95">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- <a href="login.html">
+      <button class="px-2 py-1 rounded-lg bg-white/6 border border-white/6 hover:bg-white/8 transition">Log in</button>
+    </a> -->
+    <a href="signup.html">
+      <button class="px-2 py-1 rounded-lg bg-gradient-to-r from-primary to-accent shadow-neon-lg text-white">Sign up</button>
+    </a>
+  </div>
+</div>
+
+      <!-- TOP WIDE SEARCH BAR -->
+      <div class="w-full mt-4 mb-6 px-1">
+        <form id="topWideSearch" class="flex items-center gap-2 w-full">
+          <div class="flex-1 relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 opacity-60" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 placeholder:text-slate-200 outline-none" placeholder="Search anything..." />
+          </div>
+          <button class="px-4 py-3 rounded-xl bg-gradient-to-r from-primary to-accent shadow">Search</button>
+        </form>
+      </div>
+
+   
+
+    </div>
+  </header>
+  <script>
+  const token = localStorage.getItem("token");
+
+  const authDiv = document.getElementById("authButtons");
+
+  if (token) {
+    // If user logged in → show logout button
+    authDiv.innerHTML = `
+      <button id="logoutBtn" class="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+        Logout
+      </button>
+    `;
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.reload(); // refresh page → login buttons return
+    });
+
+  } else {
+    // If no user → show Login + Signup buttons
+    authDiv.innerHTML = `
+      <a href="login.html">
+        <button class="px-3 py-1 rounded-lg bg-white/6 border border-white/6 hover:bg-white/8 transition">Log in</button>
+      </a>
+      <a href="signup.html">
+        <button class="px-3 py-1 rounded-lg bg-gradient-to-r from-primary to-accent shadow-neon-lg text-white">Sign up</button>
+      </a>
+    `;
+  }
+</script>
+<script>
+if (token) {
+  fetch("https://studentquery.onrender.com/api/me", {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.user) {
+      const nameBox = document.getElementById("topUserName");
+
+      if (nameBox) {
+        nameBox.innerText = data.user.name;  // Replace StudentDM → User Name
+      }
+    }
+  })
+  .catch(() => {
+    // Agar kuch error ho to default StudentDM hi rahega
+  });
+}
+</script>
+  <script>
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', ()=>{
+      document.body.classList.toggle('light-mode');
+    });
+
+    // Small JS for interactivity: hero parallax and card tilt
+    (function(){
+      const hero = document.getElementById('hero');
+      const mockup = document.getElementById('mockup');
+      const scene = document.querySelectorAll('.scene');
+
+      function handleMove(e){
+        const bounds = hero.getBoundingClientRect();
+        const cx = bounds.left + bounds.width/2;
+        const cy = bounds.top + bounds.height/2;
+        const x = (e.clientX - cx) / bounds.width;
+        const y = (e.clientY - cy) / bounds.height;
+        const rx = (y * 8).toFixed(2);
+        const ry = (-x * 12).toFixed(2);
+        hero.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        // mockup pop
+        if(mockup) mockup.style.transform = `rotateY(${ry*1.1}deg) rotateX(${rx*0.6}deg) translateZ(20px)`;
+      }
+
+      function resetMove(){ hero.style.transform='rotateX(0deg) rotateY(0deg)'; if(mockup) mockup.style.transform=''; }
+
+      hero.addEventListener('mousemove', handleMove);
+      hero.addEventListener('mouseleave', resetMove);
+
+      // small tilt for cards
+      document.querySelectorAll('.card-3d').forEach(card=>{
+        card.addEventListener('mousemove', function(e){
+          const r = this.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width;
+          const py = (e.clientY - r.top) / r.height;
+          const tiltX = (py - 0.5) * 12;
+          const tiltY = (px - 0.5) * -12;
+          this.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(8px)`;
+        });
+        card.addEventListener('mouseleave', function(){ this.style.transform = 'rotateX(0deg) rotateY(0deg)'; });
+      });
+
+      // simple search handler
+      const form = document.getElementById('searchForm');
+      form.addEventListener('submit', function(e){ e.preventDefault(); const q = document.getElementById('searchInput').value.trim(); if(!q) { alert('Please type something to search'); return; } alert('Searching for: ' + q); });
+
+    })();
+  </script>
+<h1 class="text-4xl font-bold mb-8 text-center text-yellow-400">Latest News</h1>
+
+<div class="w-full flex justify-center" style="margin:2px">
+  <div id="newsList" class="w-full flex flex-col gap-[2px]">
+    <img src="image.jpg" class="w-full" alt="news">
+    <!-- More news items -->
+  </div>
+</div>
+
+<!-- Modal for zoomed image -->
+<div id="imageModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+  <img id="modalImg" src="" class="max-h-[90%] max-w-[90%] rounded-lg shadow-lg"/>
+</div>
+<br><br><br><br><br>
+  <!-- BOTTOM NAVBAR -->
+   <!-- BOTTOM NAVBAR -->
+  <nav class="fixed bottom-4 left-0 right-0 flex justify-center z-50 pointer-events-auto">
+    <div class="w-full max-w-lg px-4 bottom-safe">
+      <div class="glass rounded-full px-4 py-2 flex items-center justify-between">
+        <a href="index.html"><button class="flex flex-col items-center text-xs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <span class="mt-1">Home</span>
+        </button></a>
+        <a href="news.html"><button class="flex flex-col items-center text-xs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h18" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <span class="mt-1">News</span>
+        </button></a>
+        <button class="flex flex-col items-center text-xs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <span class="mt-1">Courses</span>
+        </button>
+       <a href="./profile.html">
+  <button class="flex flex-col items-center text-xs" id="bottomProfileBtn">
+    <div id="bottomProfileIcon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 20a8 8 0 0116 0" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <img id="bottomProfileImg" class="w-7 h-7 rounded-full hidden" />
+
+    <span class="mt-1">Profile</span>
+  </button>
+</a>
+
+      </div>
+    </div>
+  </nav>
+<script>
+
+
+if (token) {
+  fetch("https://studentquery.onrender.com/api/me", {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.user && data.user.profileImg) {
+      
+      const img = document.getElementById("bottomProfileImg");
+      const icon = document.getElementById("bottomProfileIcon");
+
+      // Real image set
+      img.src = "https://studentquery.onrender.com/uploads/" + data.user.profileImg;
+
+      // Hide SVG icon
+      icon.classList.add("hidden");
+
+      // Show user image
+      img.classList.remove("hidden");
+    }
+  })
+  .catch(err => console.log("Profile load error:", err));
+}
+</script>
+<script>
+async function loadNews(){
+  const res = await fetch("https://studentquery.onrender.com/api/news");
+  const news = await res.json();
+  const newsList = document.getElementById("newsList");
+  newsList.innerHTML = "";
+
+  news.forEach(n=>{
+    const imgTag = n.image ? `
+      <img src="https://studentquery.onrender.com/uploads/${n.image}" 
+           class="w-full rounded-xl mb-4 border border-white/20 shadow-sm cursor-pointer" 
+           style="object-fit: cover; max-height: 400px;"
+           onclick="zoomImage(this.src)"/>` : "";
+
+    newsList.innerHTML += `
+      <div class="bg-gray-800/50 p-2 rounded-3xl border border-white/10 shadow-lg hover:scale-105 transform transition duration-300">
+        ${imgTag}
+        <h3 class="font-bold text-2xl mb-2 text-yellow-300">${n.title}</h3>
+        <p class="text-gray-300 text-base mb-3">${n.content}</p>
+        <p class="text-gray-500 text-sm">${new Date(n.createdAt).toLocaleString()}</p>
+      </div>
+    `;
+  });
+}
+
+// Function to open zoom modal
+function zoomImage(src){
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = src;
+  modal.classList.remove('hidden');
+}
+
+// Close modal on click
+document.getElementById('imageModal').addEventListener('click', ()=>{
+  document.getElementById('imageModal').classList.add('hidden');
+});
+
+loadNews();
+</script>
+
+</body>
+</html>
+
+
+
+

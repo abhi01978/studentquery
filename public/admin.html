@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex min-h-screen">
+
+<!-- SIDEBAR -->
+<div class="w-64 bg-gray-800/70 backdrop-blur-xl p-5 flex flex-col justify-between">
+  <div>
+    <h1 class="text-2xl font-bold mb-8 text-center">StudentDM Admin</h1>
+    <nav class="flex flex-col gap-4">
+      <button id="navDashboard" class="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-left">Dashboard</button>
+      <button id="navAddNews" class="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-left">Add News</button>
+      <button id="navViewNews" class="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-left">All News</button>
+    </nav>
+  </div>
+  <button id="logoutBtn" class="py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 transition">Logout</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="flex-1 p-6 overflow-y-auto">
+  <!-- DARK/LIGHT TOGGLE -->
+  <div class="flex justify-end mb-4">
+    <button id="toggleTheme" class="px-4 py-2 bg-gray-700/40 rounded-lg">Toggle Dark/Light</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardPage">
+    <h2 class="text-3xl font-bold mb-6">Welcome Admin</h2>
+    <p class="text-gray-300">Use the sidebar to navigate and manage news content efficiently.</p>
+  </div>
+
+  <!-- ADD NEWS FORM -->
+  <div id="addNewsPage" class="hidden max-w-xl mx-auto bg-gray-800/50 backdrop-blur-xl p-6 rounded-2xl shadow-xl mb-6">
+    <h2 class="text-xl font-semibold mb-4">Add / Edit News</h2>
+    <form id="newsForm" class="flex flex-col gap-4">
+      <input type="hidden" id="newsId">
+      <input type="text" id="title" placeholder="Title" class="p-3 rounded-lg bg-gray-700/40 outline-none" required>
+      <textarea id="content" placeholder="Content" class="p-3 rounded-lg bg-gray-700/40 outline-none" required></textarea>
+      <input type="file" id="image" accept="image/*" class="text-gray-800">
+      <button type="submit" class="bg-green-500 py-3 rounded-lg hover:bg-green-600 transition font-semibold" id="submitBtn">Add News</button>
+    </form>
+  </div>
+
+  <!-- VIEW NEWS -->
+  <div id="viewNewsPage" class="hidden max-w-3xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">All News</h2>
+    <input type="text" id="searchNews" placeholder="Search news..." class="w-full p-3 rounded-lg bg-gray-700/40 outline-none mb-4">
+    <div id="newsList" class="flex flex-col gap-4"></div>
+  </div>
+</div>
+
+<script>
+let isDark = true;
+
+// Theme toggle
+const toggleThemeBtn = document.getElementById("toggleTheme");
+toggleThemeBtn.addEventListener("click", () => {
+  isDark = !isDark;
+  document.body.classList.toggle("bg-gray-900", isDark);
+  document.body.classList.toggle("bg-gray-100", !isDark);
+  document.body.classList.toggle("text-white", isDark);
+  document.body.classList.toggle("text-black", !isDark);
+});
+
+// Admin token check
+const token = localStorage.getItem("adminToken");
+if(!token) window.location.href = "admin-login.html";
+
+// Navigation
+const dashboardPage = document.getElementById("dashboardPage");
+const addNewsPage = document.getElementById("addNewsPage");
+const viewNewsPage = document.getElementById("viewNewsPage");
+
+document.getElementById("navDashboard").addEventListener("click", ()=>{
+  dashboardPage.classList.remove("hidden");
+  addNewsPage.classList.add("hidden");
+  viewNewsPage.classList.add("hidden");
+});
+document.getElementById("navAddNews").addEventListener("click", ()=>{
+  dashboardPage.classList.add("hidden");
+  addNewsPage.classList.remove("hidden");
+  viewNewsPage.classList.add("hidden");
+});
+document.getElementById("navViewNews").addEventListener("click", ()=>{
+  dashboardPage.classList.add("hidden");
+  addNewsPage.classList.add("hidden");
+  viewNewsPage.classList.remove("hidden");
+  loadNews();
+});
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  localStorage.removeItem("adminToken");
+  window.location.href = "admin-login.html";
+});
+
+// News Form & CRUD logic
+const newsForm = document.getElementById("newsForm");
+const newsListDiv = document.getElementById("newsList");
+const submitBtn = document.getElementById("submitBtn");
+const newsIdInput = document.getElementById("newsId");
+
+// Load all news
+async function loadNews(search="") {
+  const res = await fetch("https://studentquery.onrender.com/api/news");
+  const news = await res.json();
+  newsListDiv.innerHTML = "";
+
+  news.filter(n => n.title.toLowerCase().includes(search.toLowerCase()))
+      .forEach(n => {
+    const imgTag = n.image ? `<img src="https://studentquery.onrender.com/uploads/${n.image}" class="w-full h-40 object-cover rounded-xl mb-2"/>` : "";
+    newsListDiv.innerHTML += `
+      <div class="bg-gray-800/50 p-4 rounded-2xl border border-white/10 shadow-md hover:shadow-lg transition">
+        ${imgTag}
+        <h3 class="font-semibold text-lg mb-1">${n.title}</h3>
+        <p class="text-gray-300 text-sm mb-2">${n.content}</p>
+        <p class="text-gray-500 text-xs mb-2">${new Date(n.createdAt).toLocaleString()}</p>
+        <div class="flex gap-2">
+          <button class="bg-yellow-500 px-3 py-1 rounded-lg" onclick="editNews('${n._id}','${n.title}','${n.content}')">Edit</button>
+          <button class="bg-red-600 px-3 py-1 rounded-lg" onclick="deleteNews('${n._id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Add / Update News
+newsForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("content", document.getElementById("content").value);
+  const imgFile = document.getElementById("image").files[0];
+  if(imgFile) formData.append("image", imgFile);
+
+  let url = "https://studentquery.onrender.com/api/news";
+  let method = "POST";
+
+  if(newsIdInput.value) { // Update
+    url += `/${newsIdInput.value}`;
+    method = "PUT";
+  }
+
+  const res = await fetch(url, {
+    method,
+    headers: { "Authorization": "Bearer " + token },
+    body: formData
+  });
+
+  const data = await res.json();
+  if(res.ok){
+    alert(data.message);
+    newsForm.reset();
+    newsIdInput.value = "";
+    submitBtn.textContent = "Add News";
+    loadNews();
+  } else alert(data.message);
+});
+
+// Edit function
+function editNews(id, title, content){
+  newsIdInput.value = id;
+  document.getElementById("title").value = title;
+  document.getElementById("content").value = content;
+  submitBtn.textContent = "Update News";
+}
+
+// Delete function
+async function deleteNews(id){
+  if(!confirm("Are you sure?")) return;
+  const res = await fetch(`https://studentquery.onrender.com/api/news/${id}`, {
+    method:"DELETE",
+    headers:{ "Authorization":"Bearer "+token }
+  });
+  const data = await res.json();
+  if(res.ok) loadNews();
+  else alert(data.message);
+}
+
+// Search
+document.getElementById("searchNews").addEventListener("input",(e)=>{
+  loadNews(e.target.value);
+});
+</script>
+</body>
+</html>
+

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Notes - Study AI Buddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
+    .phone { width: 100%; max-width: 430px; margin: 0 auto; height: 100vh; overflow-y: auto; background: white; position: relative; }
+    @media (min-width: 768px) { 
+      .phone { border-radius: 40px; height: 860px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 12px solid #000; } 
+    }
+    .suggestions { max-height: 200px; overflow-y: auto; }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-gray-100">
+
+  <div class="phone">
+
+    <!-- Top Bar with Search -->
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-sm z-40 px-5 py-4">
+      <div class="flex justify-between items-center mb-3">
+        <h1 class="text-xl font-bold text-[#0A3E87]">PDF Notes</h1>
+        <button id="uploadBtn" class="hidden bg-[#0A3E87] text-white px-5 py-2 rounded-full font-medium shadow-lg hover:bg-blue-700 transition">
+          + Upload
+        </button>
+      </div>
+
+      <!-- Search Bar with Auto Suggestions -->
+      <div class="relative">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search by subject... (Physics, Hindi, Maths)" 
+          class="w-full border border-gray-300 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-blue-500 text-sm"
+        />
+        <svg class="absolute right-3 top-3.5 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+
+        <!-- Suggestions Dropdown -->
+        <div id="suggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg hidden suggestions mt-1 z-50">
+          <!-- Auto suggestions yahan aayenge -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes List -->
+    <div class="pt-32 pb-32 px-5">
+      <div id="notesContainer" class="space-y-4">
+        <!-- Notes yahan load honge -->
+      </div>
+      <div id="noNotes" class="text-center text-gray-500 mt-10">
+        <p class="text-lg">No notes yet</p>
+        <p>Be the first to upload!</p>
+      </div>
+    </div>
+
+    <!-- Bottom Nav (tera wahi purana) -->
+   <div class="fixed bottom-0 left-0 right-0 bg-white border-t py-3 flex justify-around text-gray-700 text-xs z-50">
+
+  <!-- Home -->
+  <a href="index.html" class="flex flex-col items-center">
+    <img src="https://img.icons8.com/ios-filled/50/666666/home.png" class="w-6" />
+    <span>Home</span>
+  </a>
+
+  <!-- MCQ -->
+  <a href="#" class="flex flex-col items-center">
+    <img src="https://img.icons8.com/ios-filled/50/666666/task.png" class="w-6" />
+    <span>MCQ</span>
+  </a>
+
+  <!-- Floating + Button -->
+  <div class="relative -top-6">
+    <div class="w-16 h-16 bg-[#0A3E87] text-white rounded-full flex justify-center items-center text-4xl shadow-2xl">
+      +
+    </div>
+  </div>
+
+  <!-- Notes (ACTIVE PAGE) -->
+  <a href="notes.html" class="flex flex-col items-center">
+    <img src="https://img.icons8.com/ios-filled/50/3b82f6/book.png" class="w-6" />
+    <span class="text-blue-600 font-bold">Notes</span>
+  </a>
+
+  <!-- Profile -->
+  <a href="profile.html" class="flex flex-col items-center relative">
+
+    <!-- Default Icon -->
+    <div id="bottomProfileIcon" class="flex flex-col items-center">
+      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+    </div>
+
+    <!-- Profile Image -->
+    <img id="bottomProfileImg"
+      class="rounded-full border-4 border-white shadow-xl absolute -top-5 left-1/2 -translate-x-1/2 hidden h-12 w-12 mt-4"
+      alt="Profile" />
+
+    <!-- Text -->
+    <span class="mt-2">Profile</span>
+  </a>
+
+</div>
+
+    
+
+
+  <!-- Upload Modal (tera wahi purana) -->
+  <div id="uploadModal" class="fixed inset-0 bg-black/70 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-6 w-11/12 max-w-md">
+      <h2 class="text-2xl font-bold mb-4">Upload Notes / PDF</h2>
+      <input type="text" id="noteTitle" placeholder="Note Title" class="w-full border rounded-xl px-4 py-3 mb-3" />
+      <select id="noteSubject" class="w-full border rounded-xl px-4 py-3 mb-3">
+        <option value="">Select Subject</option>
+        <option>Physics</option><option>Chemistry</option><option>Maths</option><option>Biology</option>
+        <option>English</option><option>Hindi</option><option>History</option><option>Geography</option><option>Other</option>
+      </select>
+      <input type="file" id="noteFile" accept=".pdf" class="w-full border rounded-xl px-4 py-3 mb-4" />
+      <div class="flex gap-3">
+        <button id="cancelUpload" class="flex-1 py-3 bg-gray-200 rounded-xl font-bold">Cancel</button>
+        <button id="submitUpload" class="flex-1 py-3 bg-[#0A3E87] text-white rounded-xl font-bold">Upload</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const token = localStorage.getItem("token");
+
+  // Upload button sirf logged-in ko dikhao
+  if (token) {
+    document.getElementById("uploadBtn").classList.remove("hidden");
+  }
+
+  const notesContainer = document.getElementById("notesContainer");
+  const noNotes = document.getElementById("noNotes");
+  const searchInput = document.getElementById("searchInput");
+  const suggestions = document.getElementById("suggestions");
+
+  let allNotes = []; // saare notes store karne ke liye
+
+  // -----------------------------------------------------
+  // LOAD ALL NOTES
+  // -----------------------------------------------------
+  async function loadNotes() {
+    try {
+      const res = await fetch("https://studentquery.onrender.com/api/notes");
+      const data = await res.json();
+      allNotes = data.notes || [];
+
+      if (allNotes.length === 0) {
+        noNotes.classList.remove("hidden");
+        return;
+      }
+
+      noNotes.classList.add("hidden");
+      renderNotes(); // sab notes dikhado
+    } catch (err) {
+      console.log("Error:", err);
+    }
+  }
+
+  // -----------------------------------------------------
+  // RENDER NOTES (VIEW + DOWNLOAD)
+  // -----------------------------------------------------
+  function renderNotes(searchTerm = "") {
+    notesContainer.innerHTML = "";
+
+    const filtered = allNotes.filter(note =>
+      note.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      note.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (filtered.length === 0) {
+      notesContainer.innerHTML =
+        `<p class="text-center text-gray-500 text-lg">Koi PDF nahi mila "${searchTerm}" ke liye</p>`;
+      return;
+    }
+
+    filtered.forEach(note => {
+      const isLoggedIn = !!token;
+
+      // ⭐ CORRECT VIEW URL (open in browser)
+   const viewUrl = note.fileUrl.replace("/raw/upload/", "/raw/upload/fl_attachment:false/");
+const downloadUrl = note.fileUrl.replace("/raw/upload/", "/raw/upload/fl_attachment/");
+
+
+      const buttonHtml = isLoggedIn
+        ? `
+          <div class="flex gap-2">
+            <a href="${note.fileUrl}"
+               target="_blank"
+               class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition">
+              View PDF
+            </a>
+
+            <a href="${downloadUrl}"
+               download
+               class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition">
+              Download
+            </a>
+          </div>
+        `
+        : `
+          <button disabled
+                  class="bg-gray-400 text-gray-200 px-4 py-2 rounded-full text-sm cursor-not-allowed">
+            Login to Access
+          </button>
+        `;
+
+      notesContainer.innerHTML += `
+        <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-bold text-lg">${note.title}</h3>
+              <p class="text-sm text-gray-600">by ${note.uploaderName || "Student"}</p>
+              <span class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs mt-2">
+                ${note.subject}
+              </span>
+            </div>
+            ${buttonHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  // -----------------------------------------------------
+  // AUTO-SUGGESTIONS FOR SUBJECT
+  // -----------------------------------------------------
+  function showSuggestions(query) {
+    suggestions.innerHTML = "";
+
+    if (!query.trim()) {
+      suggestions.classList.add("hidden");
+      return;
+    }
+
+    const matchedSubjects = [...new Set(
+      allNotes
+        .map(n => n.subject)
+        .filter(s => s.toLowerCase().includes(query.toLowerCase()))
+    )];
+
+    if (matchedSubjects.length === 0) {
+      suggestions.classList.add("hidden");
+      return;
+    }
+
+    suggestions.classList.remove("hidden");
+
+    matchedSubjects.forEach(sub => {
+      const div = document.createElement("div");
+      div.className =
+        "px-4 py-3 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-0";
+      div.textContent = sub;
+
+      div.onclick = () => {
+        searchInput.value = sub;
+        suggestions.classList.add("hidden");
+        renderNotes(sub);
+      };
+
+      suggestions.appendChild(div);
+    });
+  }
+
+  // SEARCH EVENT
+  searchInput.addEventListener("input", (e) => {
+    const query = e.target.value.trim();
+    showSuggestions(query);
+    if (!query) renderNotes(); // blank search → show all
+  });
+
+  // Click outside → hide suggestions
+  document.addEventListener("click", (e) => {
+    if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
+      suggestions.classList.add("hidden");
+    }
+  });
+
+  // -----------------------------------------------------
+  // UPLOAD PDF (ONLY LOGGED-IN USER)
+  // -----------------------------------------------------
+  if (token) {
+    uploadBtn.onclick = () => uploadModal.classList.remove("hidden");
+    cancelUpload.onclick = () => uploadModal.classList.add("hidden");
+
+    submitUpload.onclick = async () => {
+      const title = document.getElementById("noteTitle").value;
+      const subject = document.getElementById("noteSubject").value;
+      const file = document.getElementById("noteFile").files[0];
+
+      if (!title || !subject || !file) {
+        alert("Sab fill kar bhai!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("subject", subject);
+      formData.append("file", file);
+
+      try {
+        const res = await fetch("https://studentquery.onrender.com/api/notes", {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}` },
+          body: formData
+        });
+
+        if (res.ok) {
+          alert("Upload ho gaya bhai!");
+          uploadModal.classList.add("hidden");
+          loadNotes();
+        }
+      } catch (err) {
+        alert("Network error");
+      }
+    };
+  }
+
+  // START APP
+  loadNotes();
+</script>
+<script>const token = localStorage.getItem("token");
+
+if (token) {
+  fetch("https://studentquery.onrender.com/api/me", {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.user) {
+      // Bottom profile image set
+      if (data.user.profileImg) {
+        const img = document.getElementById("bottomProfileImg");
+        img.src = data.user.profileImg;
+        img.classList.remove("hidden");
+
+        // Hide default icon
+        document.getElementById("bottomProfileIcon").style.display = "none";
+      }
+    }
+  });
+}
+</script>
+
+    <!-- Floating Vertical Navbar -->
+<div id="navbar" class="fixed right-2 top-1/2 -translate-y-1/2 flex flex-col items-end z-50">
+
+  <!-- Menu Items -->
+  <div id="menuItems"
+       class="flex flex-col items-end gap-4 opacity-0 translate-y-6 transition-all duration-500 pointer-events-none h-0 overflow-hidden">
+
+    <!-- Chat AI -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Chat AI</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-blue-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M12 2c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2s-2-.9-2-2V4c0-1.1.9-2 2-2z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Career Guidance -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Career Guidance</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-green-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M22 12l-10-5-10 5 10 5 10-5z"/>
+          <path d="M2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6"/>
+          <path d="M12 22v-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Study Planner -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Study Planner</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-purple-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-purple-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M2 7v14c0 .55.45 1 1 1h7V7H3c-.55 0-1 .45-1 1z"/>
+          <path d="M22 7v14c0 .55-.45 1-1 1h-7V7h7c.55 0 1 .45 1 1z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Skill Boost -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Skill Boost</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-orange-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-orange-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9 18h6"/>
+          <path d="M10 22h4"/>
+          <path d="M12 2a6 6 0 0 0-6 6c0 3.31 2.69 6 6 6s6-2.69 6-6a6 6 0 0 0-6-6z"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main Button -->
+  <button id="toggleBtn" class="p-4 bg-gray-400 rounded-full shadow-xl hover:bg-blue-700 transition transform z-50">
+    <img src="https://cdn-icons-png.freepik.com/512/6779/6779781.png" alt="Menu" class="h-12 w-12">
+  </button>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script>
+  const toggleBtn = document.getElementById('toggleBtn');
+  const menuItems = document.getElementById('menuItems');
+  let isOpen = false;
+
+  toggleBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      // Open menu
+      menuItems.classList.remove('opacity-0', 'translate-y-6', 'pointer-events-none', 'h-0');
+      toggleBtn.classList.add('rotate-45');
+    } else {
+      // Close menu
+      menuItems.classList.add('opacity-0', 'translate-y-6', 'pointer-events-none', 'h-0');
+      toggleBtn.classList.remove('rotate-45');
+    }
+  });
+</script>
+
+
+</body>
+</html>

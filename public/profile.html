@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <!-- Header Profile -->
+    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 px-8 pt-12 pb-10 text-white text-center">
+      <div class="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl mb-4">
+        <img id="profileImg" src="https://i.ibb.co/2y9g7Yt/user.png" alt="Student" class="w-full h-full object-cover"/>
+      </div>
+      <h1 id="name" class="text-2xl font-bold">Loading...</h1>
+      <p id="dream" class="text-blue-100 text-sm mt-1 italic">Dreamer</p>
+      <!-- Stats -->
+      <div class="flex justify-center gap-12 mt-8">
+       <div>
+  <div id="followersCount" onclick="openFollowingList('followers')" class="text-3xl font-bold cursor-pointer hover:text-blue-300 transition">0</div>
+  <div class="text-xs text-blue-100">Followers</div>
+</div>
+<div>
+  <div id="followingCount" onclick="openFollowingList('following')" class="text-3xl font-bold cursor-pointer hover:text-blue-300 transition">0</div>
+  <div class="text-xs text-blue-100">Following</div>
+</div>
+        <div>
+          <div id="notesCount" class="text-3xl font-bold">0</div>
+          <div class="text-xs text-blue-100">Notes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="px-6 py-8 space-y-8 pb-32">
+      <!-- Student Details -->
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">My Details</h2>
+        <div class="space-y-4">
+          <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="bg-blue-100 rounded-xl p-3"><i class="fas fa-phone text-blue-600"></i></div>
+              <div><div class="text-sm text-gray-500">Phone</div><div id="phone" class="font-semibold">-</div></div>
+            </div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="bg-indigo-100 rounded-xl p-3"><i class="fas fa-university text-indigo-600"></i></div>
+              <div><div class="text-sm text-gray-500">University / Board</div><div id="university" class="font-semibold">-</div></div>
+            </div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="bg-purple-100 rounded-xl p-3"><i class="fas fa-building text-purple-600"></i></div>
+              <div><div class="text-sm text-gray-500">College / School</div><div id="college" class="font-semibold">-</div></div>
+            </div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="bg-green-100 rounded-xl p-3"><i class="fas fa-graduation-cap text-green-600"></i></div>
+              <div><div class="text-sm text-gray-500">Course & Semester</div><div id="courseSem" class="font-semibold">-</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Folders -->
+      <div>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold text-gray-800">My Folders</h2>
+          <a href="#" class="text-sm text-gray-500">view all →</a>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+            <div class="bg-blue-100 rounded-xl p-5 w-16 h-16 mx-auto mb-3"><i class="fas fa-file-pdf text-blue-600 text-2xl"></i></div>
+            <div class="font-medium">Notes / PDF</div>
+            <div class="text-xs text-gray-500 mt-1">23 files</div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-lg transition">
+            <div class="bg-green-100 rounded-xl p-5 w-16 h-16 mx-auto mb-3"><i class="fas fa-question-circle text-green-600 text-2xl"></i></div>
+            <div class="font-medium">MCQ Tests</div>
+            <div class="text-xs text-gray-500 mt-1">19 taken</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Classmates -->
+     <!-- My Classmates -->
+<div>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">My Classmates</h2>
+    <a href="following.html" class="text-sm text-gray-500">view all →</a>
+  </div>
+  <div id="classmatesContainer" class="space-y-4">
+    <p class="text-center text-gray-500">Loading classmates...</p>
+  </div>
+</div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+      <div class="flex justify-around items-center py-4 max-w-md mx-auto">
+        <a href="index.html" class="text-gray-400 hover:text-blue-600"><i class="fas fa-home text-xl"></i></a>
+        <a href="news.html" class="text-gray-400 hover:text-blue-600"><i class="fas fa-bell text-xl"></i></a>
+        <button class="text-white bg-blue-600 p-4 rounded-full shadow-lg -mt-8 hover:bg-blue-700 transform hover:scale-110 transition">
+          <i class="fas fa-plus text-lg"></i>
+        </button>
+        <a href="notes.html" class="text-gray-400 hover:text-blue-600"><i class="fas fa-book text-xl"></i></a>
+        <button id="logoutBtn" class="text-red-600 hover:text-red-700">
+          <i class="fas fa-sign-out-alt text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Login kar pehle bhai!");
+    window.location.href = "login.html";
+  }
+
+  let currentUserId = null;
+  let currentUserFollowing = [];
+
+  async function loadProfile() {
+    try {
+      const res = await fetch("https://studentquery.onrender.com/api/me", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Session expired");
+      const data = await res.json();
+      const u = data.user;
+
+      currentUserId = u._id;
+      currentUserFollowing = u.following || [];
+
+      // Profile Fill
+      document.getElementById("profileImg").src = u.profileImg || "https://i.ibb.co/2y9g7Yt/user.png";
+      document.getElementById("name").textContent = u.name || "Student";
+      document.getElementById("dream").textContent = u.dream ? `"${u.dream}"` : "Keep Growing";
+      document.getElementById("phone").textContent = u.phone || "-";
+      document.getElementById("university").textContent = u.university || u.board || "Not Set";
+      document.getElementById("college").textContent = u.college || "Not Set";
+      document.getElementById("courseSem").textContent = `${u.course || "N/A"} • ${u.semester || "N/A"} Semester`;
+
+      // FOLLOWING COUNT (Real)
+      document.getElementById("followingCount").textContent = currentUserFollowing.length;
+
+      // FOLLOWERS COUNT (Real banaya — jo mujhe follow kar rahe hain)
+      const allUsersRes = await fetch("https://studentquery.onrender.com/api/users", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const allUsersData = await allUsersRes.json();
+      const allUsers = allUsersData.users || [];
+
+      let followersCount = 0;
+      allUsers.forEach(user => {
+        if (user.following && user.following.includes(currentUserId)) {
+          followersCount++;
+        }
+      });
+      document.getElementById("followersCount").textContent = followersCount;
+
+      // Notes count (abhi static, baad mein real kar dena)
+      document.getElementById("notesCount").textContent = "42";
+
+      loadClassmates(allUsers); // Pass all users to avoid double API call
+
+    } catch (err) {
+      alert("Session expired! Login again kar.");
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+  }
+
+  // CLASSMATES WITH COURSE + SEMESTER
+// FINAL & PERFECT CLASSMATES — CLICK PE PROFILE KHULEGI
+function loadClassmates(allUsers) {
+  const container = document.getElementById("classmatesContainer");
+  container.innerHTML = `<p class="text-center text-gray-500">Loading classmates...</p>`;
+
+  if (!allUsers || allUsers.length === 0) {
+    container.innerHTML = `<p class="text-center text-gray-500">Koi classmate nahi mila</p>`;
+    return;
+  }
+
+  container.innerHTML = "";
+
+  allUsers.forEach(user => {
+    if (user._id === currentUserId) return; // khud ko mat dikhao
+
+    const isFollowing = currentUserFollowing.includes(user._id);
+    const img = user.profileImg || "https://i.ibb.co/2y9g7Yt/user.png";
+
+    const displayText = user.course && user.semester
+      ? `${user.course} • ${user.semester} Sem`
+      : user.board ? `${user.board} Board` : "Student";
+
+    container.innerHTML += `
+      <!-- Pura card clickable — profile khulegi -->
+      <div onclick="openUserProfile('${user._id}')" 
+           class="bg-white border border-gray-200 rounded-2xl p-5 flex items-center justify-between shadow-sm hover:shadow-lg transition-all cursor-pointer transform hover:scale-[1.02]">
+        
+        <div class="flex items-center gap-4 flex-1">
+          <img src="${img}" class="w-12 h-12 rounded-full border-2 border-gray-200 object-cover" alt="${user.name}"/>
+          <div>
+            <div class="font-semibold text-gray-800">${user.name}</div>
+            <div class="text-xs text-indigo-600 font-medium">${displayText}</div>
+          </div>
+        </div>
+
+        <!-- Follow button — click event stop karega taaki profile na khule -->
+        <button onclick="event.stopPropagation(); toggleFollow('${user._id}', this)"
+                class="px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                  isFollowing
+                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md'
+                }">
+          ${isFollowing ? 'Following' : 'Follow'}
+        </button>
+      </div>
+    `;
+  });
+}
+
+  // FOLLOW / UNFOLLOW (count bhi update karega)
+  async function toggleFollow(userId, button) {
+    const wasFollowing = button.textContent === "Following";
+
+    try {
+      const res = await fetch(`https://studentquery.onrender.com/api/follow/${userId}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        if (wasFollowing) {
+          button.textContent = "Follow";
+          button.classList.remove("bg-gray-200", "text-gray-700", "hover:bg-gray-300");
+          button.classList.add("bg-blue-600", "text-white", "hover:bg-blue-700", "shadow-md");
+          currentUserFollowing = currentUserFollowing.filter(id => id !== userId);
+        } else {
+          button.textContent = "Following";
+          button.classList.remove("bg-blue-600", "text-white", "hover:bg-blue-700", "shadow-md");
+          button.classList.add("bg-gray-200", "text-gray-700", "hover:bg-gray-300");
+          currentUserFollowing.push(userId);
+        }
+
+        // Real-time update dono counts
+        document.getElementById("followingCount").textContent = currentUserFollowing.length;
+
+        // Followers count bhi update kar (koi unfollow karega toh -1)
+        const allRes = await fetch("https://studentquery.onrender.com/api/users", {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const allData = await allRes.json();
+        let newFollowersCount = 0;
+        allData.users.forEach(u => {
+          if (u.following && u.following.includes(currentUserId)) newFollowersCount++;
+        });
+        document.getElementById("followersCount").textContent = newFollowersCount;
+
+      } else {
+        alert("Follow karne mein error!");
+      }
+    } catch (err) {
+      alert("Network error bhai!");
+    }
+  }
+
+  // Logout
+  document.getElementById("logoutBtn").onclick = () => {
+    if (confirm("Logout karna hai bhai?")) {
+      localStorage.removeItem("token");
+      alert("Logout successful! Fir milenge");
+      window.location.href = "login.html";
+    }
+  };
+  function openFollowingList(type) {
+  localStorage.setItem("viewListType", type); // followers ya following
+  window.location.href = "following.html";
+}
+  // Kisi bhi user pe click → uski profile kholo
+function openUserProfile(userId) {
+  localStorage.setItem("viewUserId", userId);
+  window.location.href = "userprofile.html";
+}
+  
+
+  // Start everything
+  loadProfile();
+</script>
+
+  <!-- Floating Vertical Navbar -->
+<div id="navbar" class="fixed right-2 top-1/2 -translate-y-1/2 flex flex-col items-end z-50">
+
+  <!-- Menu Items -->
+  <div id="menuItems"
+       class="flex flex-col items-end gap-4 opacity-0 translate-y-6 transition-all duration-500 pointer-events-none h-0 overflow-hidden">
+
+    <!-- Chat AI -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Chat AI</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-blue-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M12 2c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2s-2-.9-2-2V4c0-1.1.9-2 2-2z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Career Guidance -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Career Guidance</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-green-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-green-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M22 12l-10-5-10 5 10 5 10-5z"/>
+          <path d="M2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6"/>
+          <path d="M12 22v-6"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Study Planner -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Study Planner</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-purple-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-purple-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M2 7v14c0 .55.45 1 1 1h7V7H3c-.55 0-1 .45-1 1z"/>
+          <path d="M22 7v14c0 .55-.45 1-1 1h-7V7h7c.55 0 1 .45 1 1z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Skill Boost -->
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1 bg-white shadow-md rounded-lg text-sm font-medium">Skill Boost</span>
+      <div class="p-3 bg-white shadow-lg rounded-full cursor-pointer hover:bg-orange-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="text-orange-600 w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9 18h6"/>
+          <path d="M10 22h4"/>
+          <path d="M12 2a6 6 0 0 0-6 6c0 3.31 2.69 6 6 6s6-2.69 6-6a6 6 0 0 0-6-6z"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main Button -->
+  <button id="toggleBtn" class="p-4 bg-gray-400 rounded-full shadow-xl hover:bg-blue-700 transition transform z-50">
+    <img src="https://cdn-icons-png.freepik.com/512/6779/6779781.png" alt="Menu" class="h-12 w-12">
+  </button>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script>
+  const toggleBtn = document.getElementById('toggleBtn');
+  const menuItems = document.getElementById('menuItems');
+  let isOpen = false;
+
+  toggleBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      // Open menu
+      menuItems.classList.remove('opacity-0', 'translate-y-6', 'pointer-events-none', 'h-0');
+      toggleBtn.classList.add('rotate-45');
+    } else {
+      // Close menu
+      menuItems.classList.add('opacity-0', 'translate-y-6', 'pointer-events-none', 'h-0');
+      toggleBtn.classList.remove('rotate-45');
+    }
+  });
+</script>
+</body>
+</html>
+
+
+
+
+
+

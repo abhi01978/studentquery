@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-gray-800/50 backdrop-blur-xl p-8 rounded-2xl shadow-xl border border-white/10">
+    <h2 class="text-3xl font-bold text-center mb-6">Welcome Back 👋</h2>
+
+    <form id="loginForm" class="space-y-5">
+      <div>
+        <label class="block mb-1 text-sm text-gray-300">Phone Number</label>
+        <input type="text" id="phone" class="w-full px-4 py-3 rounded-xl bg-gray-700/50 border border-gray-600 outline-none focus:border-blue-500" placeholder="Enter phone number" required />
+      </div>
+
+      <div>
+        <label class="block mb-1 text-sm text-gray-300">Password</label>
+        <input type="password" id="password" class="w-full px-4 py-3 rounded-xl bg-gray-700/50 border border-gray-600 outline-none focus:border-blue-500" placeholder="Enter password" required />
+      </div>
+
+      <button class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition font-semibold">Login</button>
+    </form>
+
+    <p class="text-center text-gray-400 mt-4 text-sm">Don't have an account? <a href="signup.html" class="text-blue-400">Sign Up</a></p>
+  </div>
+
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const phone = document.getElementById("phone").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("https://studentquery.onrender.com/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        alert("Login Success ✔");
+        window.location.href = "index.html";
+      } else {
+        alert(data.message);
+      }
+    });
+  </script>
+</body>
+</html>
