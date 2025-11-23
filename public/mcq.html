@@ -9,90 +9,57 @@
 <body class="bg-gray-100 font-sans p-4">
   <h1 class="text-3xl font-bold text-center mb-6 text-blue-700">AI Generated MCQs</h1>
 
-  <!-- Student Info & Topic Selection -->
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg">
-    <div class="mb-4">
-      <label class="block font-semibold mb-1">Select Board / Level</label>
-      <select id="board-level" class="w-full border p-2 rounded">
-        <option value="CBSE-School">CBSE - School</option>
-        <option value="UP Board-School">UP Board - School</option>
-        <option value="ICSE-School">ICSE - School</option>
-        <option value="State Board-School">State Board - School</option>
-        <option value="UG-College">UG - College</option>
-        <option value="PG-College">PG - College</option>
-      </select>
-    </div>
+<div>
+  <select id="board-select">
+    <option value="CBSE">CBSE</option>
+    <option value="UP Board">UP Board</option>
+    <option value="ICSE">ICSE</option>
+  </select>
 
-    <div class="mb-4">
-      <label class="block font-semibold mb-1">Enter Topic / Subject</label>
-      <input type="text" id="topic" class="w-full border p-2 rounded" placeholder="e.g., Photosynthesis, Algebra, JavaScript">
-    </div>
+  <select id="level-select">
+    <option value="School">School</option>
+    <option value="UG">UG</option>
+    <option value="PG">PG</option>
+  </select>
 
-    <button id="generate-btn" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
-      Generate MCQs
-    </button>
-  </div>
+  <input type="text" id="topic-input" placeholder="Enter Topic / Subject" />
+  <button onclick="loadMCQs()">Generate MCQs</button>
+</div>
 
-  <!-- MCQs Container -->
-  <div id="mcq-container" class="max-w-3xl mx-auto mt-6 space-y-4"></div>
+<div id="mcq-container" class="mt-4"></div>
 
-  <script>
-    const token = localStorage.getItem("token"); // Logged-in user token
-    const generateBtn = document.getElementById("generate-btn");
-    const mcqContainer = document.getElementById("mcq-container");
+<script>
+async function loadMCQs() {
+  const topic = document.getElementById("topic-input").value;
+  const board = document.getElementById("board-select").value;
+  const level = document.getElementById("level-select").value;
+  
+  const token = localStorage.getItem("token"); // ya sessionStorage me JWT token
+  const res = await fetch(`/api/mcqs?topic=${topic}&board=${board}&level=${level}`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  const data = await res.json();
 
-    generateBtn.addEventListener("click", async () => {
-      const topic = document.getElementById("topic").value.trim();
-      const boardLevel = document.getElementById("board-level").value;
+  const container = document.getElementById("mcq-container");
+  container.innerHTML = "";
+  
+  if(data.mcqs.length === 0){
+    container.innerHTML = "<p>No MCQs found. Try a different topic.</p>";
+    return;
+  }
 
-      if(!topic) return alert("Please enter a topic!");
+  data.mcqs.forEach((q, idx) => {
+    container.innerHTML += `
+      <div class="p-4 mb-2 border rounded shadow">
+        <p class="font-bold">${idx+1}. ${q.question}</p>
+        <ul class="ml-4 list-disc">
+          ${q.options.map(o => `<li>${o}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  });
+}
+</script>
 
-      mcqContainer.innerHTML = `<p class="text-center text-gray-500">Generating MCQs...</p>`;
-
-      try {
-        const res = await fetch("/api/ai-mcq", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            topic,
-            board: boardLevel.split("-")[0],
-            level: boardLevel.split("-")[1]
-          })
-        });
-
-        const data = await res.json();
-
-        if(!data.mcqs || data.mcqs.length === 0) {
-          mcqContainer.innerHTML = `<p class="text-center text-red-500">No MCQs generated. Try a different topic.</p>`;
-          return;
-        }
-
-        // Render MCQs
-        mcqContainer.innerHTML = "";
-        data.mcqs.forEach((mcq, index) => {
-          mcqContainer.innerHTML += `
-            <div class="bg-white p-4 rounded-xl shadow-md">
-              <p class="font-semibold mb-2">Q${index+1}: ${mcq.question}</p>
-              <div class="space-y-1">
-                ${mcq.options.map((opt, i) => `
-                  <div class="flex items-center">
-                    <input type="radio" name="q${index}" id="q${index}o${i}" class="mr-2">
-                    <label for="q${index}o${i}">${opt}</label>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          `;
-        });
-
-      } catch (err) {
-        console.error(err);
-        mcqContainer.innerHTML = `<p class="text-center text-red-500">Error generating MCQs.</p>`;
-      }
-    });
-  </script>
 </body>
 </html>
