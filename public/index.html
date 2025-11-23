@@ -87,13 +87,12 @@
       <img id="menuBtn" src="https://img.icons8.com/ios-filled/50/000000/menu--v1.png" class="w-6 cursor-pointer" />
       <img src="https://img.icons8.com/ios-glyphs/30/4a90e2/appointment-reminders.png" class="w-6" />
     </div>
+    
 
     <!-- Scrollable Content -->
-    <div class="pt-20 px-6 pb-32"> <!-- pb-32 for bottom nav space -->
+    <div class="pt-10 px-2 pb-32"> <!-- pb-32 for bottom nav space -->
 
-      <h1 class="text-3xl font-bold text-gray-800 mt-4">Welcome Student!</h1>
-      <p class="text-gray-500 text-sm">Your personal AI study buddy</p>
-
+   
       <!-- Search -->
       <div class="mt-6 relative">
         <input class="w-full bg-[#f2f4f7] rounded-2xl py-4 pl-12 pr-4 text-sm placeholder-gray-500" 
@@ -101,21 +100,75 @@
         <img src="https://img.icons8.com/ios-glyphs/30/9ca3af/search--v1.png" 
              class="w-5 absolute left-4 top-1/2 -translate-y-1/2 opacity-60" />
       </div>
-      <!-- Welcome Card -->
-      <div class="mt-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 text-white shadow-lg">
-        Student Doubt's Solve Just 2 Sec..
-        <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-3xl">
-          Brain
-        </div>
-        <div>
-          <h3 class="text-lg font-bold">Study Smarter with AI</h3>
-          <p class="text-sm opacity-90">All your study material in one place</p>
-        </div>
+      <!-- Slider -->
+      
+    <div class="relative mt-6 w-full h-44 overflow-hidden rounded-2xl shadow-lg">
+  <!-- Slides Container -->
+  <div id="hero-slider" class="w-full h-full relative">
+
+    <!-- Slide 1 -->
+    <div class="absolute inset-0 w-full h-full transition-opacity duration-700 opacity-100">
+      <img src="https://img.freepik.com/free-photo/still-life-books-versus-technology_23-2150063081.jpg?semt=ais_hybrid&w=740&q=80" 
+           alt="Slide 1" class="w-full h-full object-cover">
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30 rounded-2xl">
+        <h1 class="text-3xl font-bold text-white">Welcome Student!</h1>
+        <p class="text-white/80 text-sm mt-1">Your personal AI study buddy</p>
       </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="absolute inset-0 w-full h-full transition-opacity duration-700 opacity-0">
+      <img src="https://www.imf-formacion.com/uploads/media/21-9-large/04/4814-AdobeStock_377779753.jpg?v=1-0" 
+           alt="Slide 2" class="w-full h-full object-cover">
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30 rounded-2xl">
+        <h1 class="text-3xl font-bold text-white">Welcome Student!</h1>
+        <p class="text-white/80 text-sm mt-1">Your personal AI study buddy</p>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="absolute inset-0 w-full h-full transition-opacity duration-700 opacity-0">
+      <img src="https://st2.depositphotos.com/2001403/11315/i/450/depositphotos_113159158-stock-photo-laptop-and-stack-of-books.jpg" 
+           alt="Slide 3" class="w-full h-full object-cover">
+     <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30 rounded-2xl">
+  <h1 class="text-3xl font-bold text-white drop-shadow-lg">Welcome Student!</h1>
+  <p class="text-white/80 text-sm mt-1 drop-shadow">Your personal AI study buddy</p>
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Simple Slider
+  const slides = document.querySelectorAll("#hero-slider > div");
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.style.opacity = i === index ? "1" : "0";
+    });
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  // Auto slide every 4 seconds
+  setInterval(nextSlide, 4000);
+</script>
+
+ 
 
       <!-- Welcome Card -->
       <div class="mt-6 bg-[#f5f9ff] rounded-2xl p-5 flex items-center gap-4 shadow-sm">
-        <div class="w-16 h-16 bg-[#dce9ff] rounded-xl"></div>
+       <div 
+  style="background-image: url('https://classroomclipart.com/images/gallery/Animations/Education_School/student-holding-pen-paper-pad-animation.gif');" 
+  class="w-32 h-32 bg-[#dce9ff] rounded-xl bg-cover bg-center">
+</div>
+
         <div>
           <p class="text-lg font-bold text-[#0A3E87]">Study Smarter!</p>
           <p class="text-sm text-gray-600">Find all study material here</p>
@@ -129,11 +182,11 @@
           <a href="#" class="text-[#0A3E87] text-sm">view all →</a>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+       <a href="/mcq.html"> <div class="grid grid-cols-2 gap-4">
           <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
             <p class="font-bold text-lg">MCQ Practice</p>
             <p class="text-sm opacity-90 mt-1">All Subjects</p>
-          </div>
+          </div></a>
          <a href="/notes.html">
             <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
             <p class="font-bold text-lg">PDF Notes</p>
@@ -152,12 +205,186 @@
             <p class="font-bold text-lg">Doubt Chat AI</p>
             <p class="text-sm opacity-90 mt-1">24/7 Available</p>
           </div>
-          <div class="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
+          <!-- <div class="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
+            <p class="font-bold text-lg">Smart Quiz</p>
+            <p class="text-sm opacity-90 mt-1">AI Generated</p>
+          </div> -->
+           <div class="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
+
             <p class="font-bold text-lg">Smart Quiz</p>
             <p class="text-sm opacity-90 mt-1">AI Generated</p>
           </div>
+
+
+
         </div>
+        <!-- Study Planner Card -->
+ <!-- Study Planner Card -->
+    <div id="study-planner-card" class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition transform mt-4 cursor-pointer">
+      <p class="font-bold text-lg">Study Planner</p>
+      <p class="text-sm opacity-90 mt-1">Create your schedule and track your progress</p>
+    </div>
+
+    <!-- Modal -->
+    <div id="planner-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-xl p-6 w-96 relative">
+        <h2 class="text-xl font-bold mb-4 text-center">Create Your Daily Routine</h2>
+        <form id="planner-form" class="flex flex-col space-y-3">
+          <!-- Date input -->
+          <input type="date" name="date" class="border p-2 rounded w-full" required>
+
+          <input type="text" name="subject" placeholder="Subject / Task" class="border p-2 rounded w-full" required>
+          <input type="time" name="startTime" placeholder="Start Time" class="border p-2 rounded w-full" required>
+          <input type="time" name="endTime" placeholder="End Time" class="border p-2 rounded w-full" required>
+          <textarea name="notes" placeholder="Notes (optional)" class="border p-2 rounded w-full"></textarea>
+          <button type="submit" class="bg-purple-600 text-white p-2 rounded hover:bg-purple-700 transition">Save</button>
+        </form>
+        <button id="close-modal" class="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
       </div>
+    </div>
+
+    <!-- Saved Schedule List -->
+    <div id="schedule-list" class="mt-6">
+      <h3 class="text-lg font-bold mb-2">Your Saved Routines:</h3>
+      <div id="saved-routines" class="flex flex-col gap-3"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const card = document.getElementById('study-planner-card');
+    const modal = document.getElementById('planner-modal');
+    const closeModal = document.getElementById('close-modal');
+    const form = document.getElementById('planner-form');
+    const savedRoutines = document.getElementById('saved-routines');
+
+    // Open modal
+    card.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+    });
+
+    // Close modal
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    // Load saved routines from localStorage
+    function loadRoutines() {
+      savedRoutines.innerHTML = '';
+      let plannerData = JSON.parse(localStorage.getItem('studyPlanner')) || [];
+      if(plannerData.length === 0) {
+        savedRoutines.innerHTML = '<p class="text-gray-500">No routines saved yet.</p>';
+        return;
+      }
+      plannerData.forEach((item, index) => {
+        savedRoutines.innerHTML += `
+          <div class="bg-white p-3 rounded-xl shadow flex justify-between items-start">
+            <div>
+              <p class="font-bold">${item.subject}</p>
+              <p class="text-gray-600 text-sm">Date: ${item.date}</p>
+              <p class="text-gray-600 text-sm">Time: ${item.startTime} - ${item.endTime}</p>
+              ${item.notes ? `<p class="text-gray-500 text-sm">Notes: ${item.notes}</p>` : ''}
+            </div>
+            <button data-index="${index}" class="text-red-500 hover:text-red-700">Delete</button>
+          </div>
+        `;
+      });
+
+      // Add delete functionality
+      document.querySelectorAll('#saved-routines button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          let index = e.target.dataset.index;
+          plannerData.splice(index,1);
+          localStorage.setItem('studyPlanner', JSON.stringify(plannerData));
+          loadRoutines();
+        });
+      });
+    }
+
+    loadRoutines(); // Initial load
+
+    // Submit form
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {
+        date: form.date.value,
+        subject: form.subject.value,
+        startTime: form.startTime.value,
+        endTime: form.endTime.value,
+        notes: form.notes.value
+      };
+
+      let plannerData = JSON.parse(localStorage.getItem('studyPlanner')) || [];
+      plannerData.push(data);
+      localStorage.setItem('studyPlanner', JSON.stringify(plannerData));
+
+      alert('Routine saved successfully!');
+      form.reset();
+      modal.classList.add('hidden');
+      loadRoutines();
+    });
+  </script>
+            <!-- Welcome Card -->
+    <div class="relative mt-6 bg-gradient-to-r from-purple-500 to-teal-500 rounded-2xl p-5 text-white shadow-lg cursor-pointer flex items-center h-32 group overflow-hidden">
+
+  <!-- Left: GIF -->
+  <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 mr-4">
+    <img src="https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyMnN4bnVyOWJyeXljMGM0cnU5Zzkwc3E3aWI2OHV5c28zMXZrM2U5eCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/M6FJ3WN666QC9g9WU3/200w.gif" 
+         alt="AI English Speaking GIF" 
+         class="w-full h-full object-cover">
+  </div>
+
+  <!-- Right: Content -->
+  <div class="flex-1">
+    <p class="font-bold text-lg">AI English Speaking</p>
+    <p class="text-sm opacity-90 mt-1">Practice speaking English with AI anytime, anywhere</p>
+
+    <!-- Countdown Timer -->
+    <div class="mt-2 bg-black/30 px-3 py-1 rounded text-sm font-mono w-max" id="countdown-timer">
+      3d 0h 0m 0s
+    </div>
+  </div>
+
+  <!-- Coming Soon Overlay -->
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center text-white text-center font-bold text-lg opacity-0 group-hover:opacity-100 transition rounded-2xl">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 .828-.672 1.5-1.5 1.5S9 11.828 9 11s.672-1.5 1.5-1.5S12 10.172 12 11z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 10.5a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+    </svg>
+    Coming Soon 🔒
+  </div>
+</div>
+
+<script>
+  // Countdown Timer
+  const countdownElement = document.getElementById("countdown-timer");
+
+  // Set target date: 3 days from now
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 3);
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      countdownElement.textContent = "Available Now!";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+      </div>
+      
 
       <!-- Extra space so scroll works smoothly -->
       <div class="h-20"></div>
@@ -335,6 +562,7 @@
 
 </body>
 </html>
+
 
 
 
