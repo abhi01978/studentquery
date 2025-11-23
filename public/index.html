@@ -38,53 +38,72 @@
       z-index: 9998;
     }
   </style>
-    <link rel="manifest" href="../manifest.json" />
-<meta name="theme-color" content="#4CAF50">
 </head>
 <body class="flex justify-center items-center min-h-screen">
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(() => console.log("Service Worker Registered"));
-  }
-</script>
+
   <!-- Overlay -->
   <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-[9998]"></div>
 
-  <!-- Sidebar -->
-  <div id="sidebar" class="fixed top-0 left-0 w-72 h-full bg-white/95 backdrop-blur-xl shadow-2xl p-6 pt-20 z-[9999]">
+<!-- Sidebar -->
+<div id="sidebar" class="fixed top-0 left-0 w-72 h-full bg-white/95 backdrop-blur-xl shadow-2xl p-6 pt-6 z-[9999] flex flex-col justify-between">
+  
+  <!-- Top Section -->
+  <div>
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-extrabold text-[#0A3E87]" id="topUserName">Study AI Buddy</h2>
       <button id="closeBtn" class="text-3xl text-gray-700 hover:text-black">×</button>
     </div>
 
     <ul class="space-y-3 text-lg font-medium text-gray-700">
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        Profile
-      </li>
-
-      <li id="authButtons" class="my-6"></li>
-
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        MCQ Practice
-      </li>
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        PDF / Notes
-      </li>
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        Video Lectures
-      </li>
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        Previous Year Papers
-      </li>
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        Doubt Chat AI
-      </li>
-      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
-        Smart Quiz
-      </li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">Profile</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">MCQ Practice</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">PDF / Notes</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">Video Lectures</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">Previous Year Papers</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">Doubt Chat AI</li>
+      <li class="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">Smart Quiz</li>
     </ul>
+
+    <!-- Invite Button -->
+    <div class="mt-6">
+      <button id="shareBtn" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:scale-105 transition-transform">
+        Invite a Friend
+      </button>
+    </div>
   </div>
+
+  <!-- Bottom Section (Login/Signup) -->
+  <div id="authButtons" class="flex flex-col gap-3">
+    <button class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Login</button>
+    <button class="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition">Sign Up</button>
+  </div>
+
+</div>
+
+<script>
+  const shareBtn = document.getElementById('shareBtn');
+
+  shareBtn.addEventListener('click', async () => {
+    const shareData = {
+      title: 'Check this out!',
+      text: 'Hey! Check out this amazing study buddy app.',
+      url: window.location.href
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        alert('Thanks for sharing!');
+      } else {
+        navigator.clipboard.writeText(shareData.url);
+        alert('Link copied to clipboard! Share it with your friends.');
+      }
+    } catch(err) {
+      console.log('Error sharing:', err);
+    }
+  });
+</script>
+
 
   <!-- Main Screen -->
   <div class="phone bg-white">
@@ -109,7 +128,7 @@
       </div>
       <!-- Slider -->
       
-    <div class="relative mt-6 w-full  overflow-hidden rounded-2xl shadow-lg" style="height: 220px;">
+  <div class="relative mt-6 w-full  overflow-hidden rounded-2xl shadow-lg" style="height: 220px;">
   <!-- Slides Container -->
   <div id="hero-slider" class="w-full h-full relative">
 
@@ -188,6 +207,8 @@
 
   video.addEventListener("ended", startAutoSlide);
 </script>
+
+
  
 
       <!-- Welcome Card -->
@@ -210,11 +231,11 @@
           <a href="#" class="text-[#0A3E87] text-sm">view all →</a>
         </div>
 
-       <a href="/mcq.html"> <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-4">
           <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
             <p class="font-bold text-lg">MCQ Practice</p>
             <p class="text-sm opacity-90 mt-1">All Subjects</p>
-          </div></a>
+          </div>
          <a href="/notes.html">
             <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-5 rounded-2xl shadow-lg hover:scale-105 transition">
             <p class="font-bold text-lg">PDF Notes</p>
@@ -588,11 +609,9 @@
 </script>
 
 
+
 </body>
 </html>
-
-
-
 
 
 
