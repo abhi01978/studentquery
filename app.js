@@ -293,54 +293,35 @@ app.post("/api/follow/:userId", verifyToken, async (req, res) => {
 // -------------------------------
 // START SERVER
 // -------------------------------
-app.post("/api/ai-mcq", verifyToken, async (req, res) => {
+const fs = require("fs");
+
+// -------------------------------
+// JSON-based MCQs Route
+// -------------------------------
+app.get("/api/mcqs", verifyToken, (req, res) => {
   try {
-    const { topic, board, level } = req.body;
-    if (!topic || !board || !level) return res.status(400).json({ message: "Topic, board, level required" });
+    const { topic, board, level } = req.query; // query params from frontend
+    const mcqsData = JSON.parse(fs.readFileSync(path.join(__dirname, "public/data/mcqs.json")));
 
-    const prompt = `
-      Generate 10 MCQs for a ${level} student from ${board} board on topic: "${topic}".
-      Return as JSON array with keys: "question", "options" (array of 4), "answer".
-    `;
+    // Filter MCQs by topic, board, level
+    const filtered = mcqsData.filter(q =>
+      (!topic || q.topic.toLowerCase() === topic.toLowerCase()) &&
+      (!board || q.board.toLowerCase() === board.toLowerCase()) &&
+      (!level || q.level.toLowerCase() === level.toLowerCase())
+    );
 
-    const response = await fetch("https://api.gemini.com/v1/ai/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.GEMINI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gemini-1.5-turbo",
-        prompt,
-        temperature: 0.7,
-        max_output_tokens: 800
-      })
-    });
-
-    const data = await response.json();
-    console.log("Gemini API response:", data); // 🔹 Debug
-
-    let mcqs = [];
-    try {
-      mcqs = JSON.parse(data.output_text || "[]");
-    } catch (err) {
-      console.error("Gemini parse error:", err);
-      return res.status(500).json({ message: "MCQ parse failed", raw: data });
-    }
-
-    res.json({ mcqs });
-
+    res.json({ mcqs: filtered });
   } catch (err) {
-    console.error("MCQ generation error:", err);
-    res.status(500).json({ message: "MCQ generation failed", error: err.message });
+    console.error("Error loading MCQs:", err);
+    res.status(500).json({ message: "Failed to load MCQs" });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
