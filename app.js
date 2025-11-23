@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
+
 const { v2: cloudinary } = require("cloudinary");
 
 // -------------------------------
@@ -298,9 +300,13 @@ const fs = require("fs");
 // -------------------------------
 // JSON-based MCQs Route
 // -------------------------------
-app.get("/api/mcqs", verifyToken, (req, res) => {
+
+// JSON-based MCQs Route (No JWT required)
+app.get("/api/mcqs", (req, res) => {
   try {
-    const { topic, board, level } = req.query; // query params from frontend
+    const { topic, board, level } = req.query; // frontend se query params
+
+    // JSON file read karo
     const mcqsData = JSON.parse(fs.readFileSync(path.join(__dirname, "public/data/mcqs.json")));
 
     // Filter MCQs by topic, board, level
@@ -321,6 +327,7 @@ app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
