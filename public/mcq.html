@@ -1,414 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>StudyBuddy • Padhai ka Nasha</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <style>
-    body { font-family: 'Poppins', sans-serif; }
-    .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
-    .nav-btn.active { background: rgba(255,255,255,0.25) !important; transform: scale(1.05); font-weight: 700; }
-    .bubble { animation: float 6s ease-in-out infinite; }
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-
-    .nav-btn {
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.nav-btn:hover {
-  background: rgba(255, 255, 255, 0.25) !important;
-  transform: translateY(-2px);
-}
-
-.nav-btn.active {
-  background: rgba(255, 255, 255, 0.3) !important;
-  border-left: 5px solid white;
-  font-weight: 800;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQs</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-teal-500 min-h-screen text-white">
+<body class="bg-gray-100 min-h-screen p-6">
 
-  <!-- Floating Background Bubbles -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-10 w-72 h-72 bg-white opacity-10 rounded-full bubble"></div>
-    <div class="absolute bottom-32 right-20 w-96 h-96 bg-pink-300 opacity-10 rounded-full bubble"></div>
-    <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-yellow-300 opacity-10 rounded-full bubble"></div>
-  </div>
+<h1 class="text-3xl font-bold mb-6 text-center">MCQs</h1>
 
-  <!-- Mobile Top Bar -->
-  <div class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-5 glass border-b border-white/20 md:hidden">
-    <button id="menu-toggle" class="text-3xl"><i class="fas fa-bars"></i></button>
-    <h1 class="text-2xl font-bold tracking-wider">StudyBuddy</h1>
-    <div class="w-10 h-10 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-full"></div>
-  </div>
+<div id="mcq-container" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
 
-  <!-- Sidebar -->
-<!-- SIDEBAR - Ab bilkul premium iOS wala feel -->
-<div id="sidebar" class="fixed inset-y-0 left-0 w-80 bg-white/20 glass z-40 transform -translate-x-full md:translate-x-0 transition-all duration-500 pt-24 md:pt-10 backdrop-blur-2xl">
-  <div class="px-8">
-    <h2 class="text-4xl font-black mb-12 text-white drop-shadow-2xl text-center">StudyBuddy</h2>
-    
-    <div class="space-y-4">
-      <button class="nav-btn active w-full p-5 rounded-2xl flex items-center gap-5 transition-all hover:scale-105" data-target="notes-sec">
-        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-          Note
-        </div>
-        <span class="text-xl font-semibold text-white">Notes Generator</span>
-      </button>
-
-      <button class="nav-btn w-full p-5 rounded-2xl flex items-center gap-5 transition-all hover:scale-105" data-target="doubt-sec">
-        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-          Que
-        </div>
-        <span class="text-xl font-semibold text-white">Doubt Solver</span>
-      </button>
-
-      <button class="nav-btn w-full p-5 rounded-2xl flex items-center gap-5 transition-all hover:scale-105" data-target="summary-sec">
-        <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-          Sum
-        </div>
-        <span class="text-xl font-semibold text-white">Quick Summary</span>
-      </button>
-
-      <button class="nav-btn w-full p-5 rounded-2xl flex items-center gap-5 transition-all hover:scale-105" data-target="chat-sec">
-        <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-          Chat
-        </div>
-        <span class="text-xl font-semibold text-white">AI Chat</span>
-      </button>
-
-      <button class="nav-btn w-full p-5 rounded-2xl flex items-center gap-5 transition-all hover:scale-105" data-target="image-sec">
-        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-          Image
-        </div>
-        <span class="text-xl font-semibold text-white">Image Generator</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-  <div id="overlay" class="fixed inset-0 bg-black/70 z-30 hidden md:hidden"></div>
-
-  <!-- Main Content -->
-  <div class="pt-20 md:pt-0 md:ml-80 min-h-screen">
-
-    <!-- NOTES -->
-    <div id="notes-sec" class="tool-section hidden flex flex-col h-screen">
-      <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-blue-800 p-6 flex items-center z-10 shadow-2xl">
-        <button onclick="openSidebar()" class="text-4xl mr-4"><i class="fas fa-arrow-left"></i></button>
-        <h2 class="text-2xl font-bold">AI Notes Generator</h2>
-      </div>
-      <div id="notes-result" class="flex-1 overflow-y-auto p-6 pt-24 bg-white/10 backdrop-blur-lg text-white leading-relaxed text-lg"></div>
-      <div class="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-6 border-t border-white/20">
-        <input id="notes-topic" class="w-full bg-white/20 border border-white/30 rounded-full px-8 py-5 text-lg placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-blue-400" placeholder="Enter topic (e.g. Cell Division, WWII)" />
-        <div class="flex gap-3 mt-4">
-          <button id="btn-notes" class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 py-5 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition">Generate Notes</button>
-          <button id="notes-pdf" class="bg-white/30 px-8 py-5 rounded-full font-bold hover:bg-white/50 transition">PDF</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- DOUBT SOLVER -->
-    <div id="doubt-sec" class="tool-section hidden flex flex-col h-screen">
-      <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-emerald-600 p-6 flex items-center z-10 shadow-2xl">
-        <button onclick="openSidebar()" class="text-4xl mr-4"><i class="fas fa-arrow-left"></i></button>
-        <h2 class="text-2xl font-bold">Doubt Solver</h2>
-      </div>
-      <div id="doubt-result" class="flex-1 overflow-y-auto p-6 pt-24 bg-white/10 backdrop-blur-lg text-white text-lg leading-relaxed"></div>
-      <div class="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-6 border-t border-white/20">
-        <textarea id="doubt-q" rows="3" class="w-full bg-white/20 border border-white/30 rounded-3xl px-8 py-5 text-lg placeholder-white/70 resize-none focus:outline-none focus:ring-4 focus:ring-green-400" placeholder="Bhai yeh samajh nahi aa raha..."></textarea>
-        <button id="btn-doubt" class="mt-4 w-full bg-gradient-to-r from-green-500 to-emerald-500 py-5 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition">Solve Kar De Bhai!</button>
-      </div>
-    </div>
-
-    <!-- SUMMARY -->
-    <div id="summary-sec" class="tool-section hidden flex flex-col h-screen">
-      <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 p-6 flex items-center z-10 shadow-2xl">
-        <button onclick="openSidebar()" class="text-4xl mr-4"><i class="fas fa-arrow-left"></i></button>
-        <h2 class="text-2xl font-bold">AI Summary</h2>
-      </div>
-      <div id="summary-result" class="flex-1 overflow-y-auto p-6 pt-24 bg-white/10 backdrop-blur-lg text-white text-lg leading-relaxed"></div>
-      <div class="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-6 border-t border-white/20">
-        <textarea id="summary-text" rows="4" class="w-full bg-white/20 border border-white/30 rounded-3xl px-8 py-5 text-lg placeholder-white/70 resize-none focus:outline-none focus:ring-4 focus:ring-purple-400" placeholder="Yahan lamba text paste kar de..."></textarea>
-        <button id="btn-summary" class="mt-4 w-full bg-gradient-to-r from-indigo-500 to-purple-500 py-5 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition">Summary Bana De!</button>
-      </div>
-    </div>
-
-    <!-- CHAT -->
-    <div id="chat-sec" class="tool-section hidden flex flex-col h-screen">
-      <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-500 to-orange-500 p-6 flex items-center z-10 shadow-2xl">
-        <button onclick="openSidebar()" class="text-4xl mr-4"><i class="fas fa-arrow-left"></i></button>
-        <h2 class="text-2xl font-bold">StudyBuddy Chat</h2>
-      </div>
-      <div id="chat-window" class="flex-1 overflow-y-auto p-4 pt-24 bg-white/10 backdrop-blur-lg"></div>
-      <div class="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-6 border-t border-white/20">
-        <div class="flex gap-3">
-          <input id="chat-input" class="flex-1 bg-white/20 border border-white/30 rounded-full px-8 py-5 text-lg placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-yellow-400" placeholder="Kuch bhi pooch le bhai..." />
-          <button id="btn-chat" class="bg-gradient-to-r from-yellow-500 to-orange-500 px-10 py-5 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition">Send</button>
-        </div>
-        <button id="btn-chat-reset" class="block mx-auto mt-3 text-white/80 underline">Reset Chat</button>
-      </div>
-    </div>
-
-    <!-- IMAGE GENERATOR -->
-    <div id="image-sec" class="tool-section hidden flex flex-col h-screen">
-      <div class="fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 p-6 flex items-center z-10 shadow-2xl">
-        <button onclick="openSidebar()" class="text-4xl mr-4"><i class="fas fa-arrow-left"></i></button>
-        <h2 class="text-2xl font-bold">AI Image Generator</h2>
-      </div>
-      <div class="flex-1 overflow-y-auto p-6 pt-24 bg-white/10 backdrop-blur-lg flex items-center justify-center">
-        <img id="img-output" class="max-w-full rounded-3xl shadow-2xl hidden" />
-        <p class="text-white/70 text-xl">Image yahan aayega...</p>
-      </div>
-      <div class="fixed bottom-0 left-0 right-0 bg-black/30 backdrop-blur-xl p-6 border-t border-white/20">
-        <input id="img-prompt" class="w-full bg-white/20 border border-white/30 rounded-full px-8 py-5 text-lg placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-pink-400" placeholder="Bhai ek alien spaceship in space bana de..." />
-        <button id="btn-img" class="mt-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 py-5 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition">Generate Image</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- JS (Same as before + menu) -->
-  <script>
-    function openSidebar() {
-      if (window.innerWidth < 768) {
-        document.getElementById('sidebar').classList.toggle('-translate-x-full');
-        document.getElementById('overlay').classList.toggle('hidden');
-      }
-    }
-    document.getElementById('menu-toggle').onclick = openSidebar;
-    document.getElementById('overlay').onclick = () => {
-      document.getElementById('sidebar').classList.add('-translate-x-full');
-      document.getElementById('overlay').classList.add('hidden');
-    };
-
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.tool-section').forEach(s => s.classList.add('hidden'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(btn.dataset.target).classList.remove('hidden');
-        btn.classList.add('active');
-        if (window.innerWidth < 768) openSidebar();
-      };
-    });
-  </script>
-
-  <!-- Yahan apna pura purana working JS paste kar de (notes, doubt, chat, image, pdf etc.) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-////----------------------------
-//// GLOBAL LOADING & UTILS
-////----------------------------
-const showLoading = (element) => {
-  element.textContent = "Generating... sabar rakho bhai ";
-};
-const hideLoading = (element, text) => {
-  element.textContent = text;
-};
-
-// Store last generated content for PDF
-let lastNotesText = "";
-let lastDoubtText = "";
-let lastSummaryText = "";
-
-////----------------------------
-//// NOTES GENERATOR (Ab dhamakedaar)
-////----------------------------
-const notesTopic = document.getElementById('notes-topic');
-const btnNotes = document.getElementById('btn-notes');
-const notesResult = document.getElementById('notes-result');
-const notesPdfBtn = document.getElementById('notes-pdf');
-
-btnNotes.onclick = async () => {
-  const topic = notesTopic.value.trim();
-  if (!topic) return alert("Bhai topic toh daal pehle!");
-
-  showLoading(notesResult);
-
+async function loadMCQs() {
   try {
-    const res = await fetch("/notes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic })
-    });
+    const res = await fetch('/api/mcqs');
     const data = await res.json();
 
-    if (data.success) {
-      notesResult.innerHTML = data.result.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold support
-                                .replace(/\n/g, '<br>');
-      lastNotesText = data.result;
-    } else {
-      notesResult.textContent = "Error: " + (data.error || "Kuch toh gadbad hui");
+    const container = document.getElementById('mcq-container');
+    container.innerHTML = "";
+
+    if (data.mcqs.length === 0) {
+      container.innerHTML = "<p class='text-center'>No MCQs found.</p>";
+      return;
     }
-  } catch (err) {
-    notesResult.textContent = "Internet issue ya server down hai bhai";
-  }
-};
 
-// PDF Download (accha formatting)
-notesPdfBtn.onclick = () => {
-  if (!lastNotesText) return alert("Pehle notes generate kar na bhai!");
+    data.mcqs.forEach((q, idx) => {
+      const card = document.createElement("div");
+      card.className = "p-4 bg-white rounded shadow";
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  doc.setFont("helvetica");
-  doc.setFontSize(20);
-  doc.text("AI Notes - " + notesTopic.value, 15, 20);
-  
-  doc.setFontSize(12);
-  doc.setTextColor(100);
-  doc.text("Generated by StudyBuddy", 15, 30);
+      card.innerHTML = `
+        <p class="font-bold mb-2">${idx+1}. ${q.question}</p>
+        <ul class="ml-4">
+          ${q.options.map((o, i) => `
+            <li 
+              class="option p-2 border rounded mb-2 cursor-pointer hover:bg-gray-100"
+              data-answer="${q.answer}"
+              data-option="${o}"
+            >
+              ${o}
+            </li>
+          `).join('')}
+        </ul>
+        <p class="mt-2 font-semibold message"></p>
+      `;
 
-  const splitText = doc.splitTextToSize(lastNotesText, 180);
-  doc.setTextColor(0);
-  doc.setFontSize(11);
-  doc.text(splitText, 15, 45);
+      // Add click functionality
+      const options = card.querySelectorAll(".option");
+      const message = card.querySelector(".message");
+      let clicked = false;
 
-  doc.save(`${notesTopic.value || "notes"}.pdf`);
-};
+      options.forEach(opt => {
+        opt.addEventListener("click", () => {
+          if (clicked) return; // prevent multiple clicks
+          clicked = true;
 
-////----------------------------
-//// DOUBT SOLVER (Ab bilkul teacher jaisa)
-////----------------------------
-const doubtQ = document.getElementById("doubt-q");
-const btnDoubt = document.getElementById("btn-doubt");
-const doubtResult = document.getElementById("doubt-result");
+          const correct = opt.dataset.answer;
+          const chosen = opt.dataset.option;
 
-btnDoubt.onclick = async () => {
-  const question = doubtQ.value.trim();
-  if (!question) return alert("Doubt likh bhai!");
+          if (chosen === correct) {
+            opt.classList.add("bg-green-200", "border-green-500");
+            message.textContent = "Correct Answer ✔";
+            message.classList.add("text-green-600");
+          } else {
+            opt.classList.add("bg-red-200", "border-red-500");
+            message.textContent = `Wrong Answer ✘ (Correct: ${correct})`;
+            message.classList.add("text-red-600");
 
-  showLoading(doubtResult);
+            // Highlight correct option
+            options.forEach(o => {
+              if (o.dataset.option === correct) {
+                o.classList.add("bg-green-200", "border-green-500");
+              }
+            });
+          }
 
-  const res = await fetch("/doubt", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question })
-  });
-  const data = await res.json();
+          // Disable all options after one click
+          options.forEach(o => (o.style.pointerEvents = "none"));
+        });
+      });
 
-  if (data.success) {
-    doubtResult.innerHTML = data.result.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-    lastDoubtText = data.result;
-  } else {
-    doubtResult.textContent = "Nahi samajh aaya bhai, thodi der mein try kar!";
-  }
-};
-
-////----------------------------
-//// SUMMARY (Short & Sweet)
-////----------------------------
-const summaryText = document.getElementById("summary-text");
-const btnSummary = document.getElementById("btn-summary");
-const summaryResult = document.getElementById("summary-result");
-
-btnSummary.onclick = async () => {
-  const text = summaryText.value.trim();
-  if (!text) return alert("Text paste kar na!");
-
-  showLoading(summaryResult);
-
-  const res = await fetch("/summary", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text })
-  });
-  const data = await res.json();
-
-  summaryResult.innerHTML = data.success 
-    ? data.result.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
-    : "Summary nahi ban paya bhai";
-};
-
-////----------------------------
-//// STUDY BUDDY CHAT (Memory + Swag)
-////----------------------------
-const chatWindow = document.getElementById("chat-window");
-const chatInput = document.getElementById("chat-input");
-const btnChat = document.getElementById("btn-chat");
-const btnChatReset = document.getElementById("btn-chat-reset");
-
-const addMessage = (sender, text) => {
-  const div = document.createElement("div");
-  div.className = sender === "You" ? "text-blue-600 mb-2" : "text-green-700 mb-2";
-  div.innerHTML = `<strong>${sender}:</strong> ${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}`;
-  chatWindow.appendChild(div);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-};
-
-btnChat.onclick = async () => {
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-
-  addMessage("You", msg);
-  chatInput.value = "";
-
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: msg })
-  });
-  const data = await res.json();
-
-  if (data.success) {
-    addMessage("StudyBuddy", data.result);
-  } else {
-    addMessage("Error", "Bhai AI so raha hai thodi der baad try kar");
-  }
-};
-
-btnChatReset.onclick = async () => {
-  await fetch("/chat/reset", { method: "POST" });
-  chatWindow.innerHTML = "";
-  addMessage("System", "Chat reset ho gaya! Ab nayi shuruaat ");
-};
-
-////----------------------------
-//// IMAGE GENERATOR (FAL.ai ready - ab kaam karega)
-////----------------------------
-const imgPrompt = document.getElementById("img-prompt");
-const btnImg = document.getElementById("btn-img");
-const imgOutput = document.getElementById("img-output");
-// IMAGE GENERATOR (frontend script mein)
-btnImg.onclick = async () => {
-  const prompt = imgPrompt.value.trim();
-  if (!prompt) return alert("Image prompt daal bhai!");
-
-  btnImg.disabled = true;
-  btnImg.textContent = "Generating image...";
-
-  try {
-    const res = await fetch("/generate-image", {  // ← Ye route use kar
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
+      container.appendChild(card);
     });
-    const data = await res.json();
 
-    if (data.success && data.image_url) {
-      imgOutput.src = data.image_url;
-      imgOutput.classList.remove("hidden");
-    } else {
-      alert("Image error: " + (data.error || "Try again"));
-    }
   } catch (err) {
-    alert("Network issue bhai");
+    console.error("Error loading MCQs:", err);
+    document.getElementById('mcq-container').innerHTML = "<p class='text-center'>Failed to load MCQs.</p>";
   }
+}
 
-  btnImg.disabled = false;
-  btnImg.textContent = "Generate Image";
-};
+window.onload = loadMCQs;
 </script>
+
 </body>
 </html>
