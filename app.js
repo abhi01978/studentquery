@@ -293,10 +293,52 @@ app.post("/api/follow/:userId", verifyToken, async (req, res) => {
 // -------------------------------
 // START SERVER
 // -------------------------------
+
+app.post("/api/ai-mcq", verifyToken, async (req, res) => {
+  try {
+    const { topic, board, level } = req.body;
+    if (!topic || !board || !level) return res.status(400).json({ message: "Topic, board, level required" });
+
+    const prompt = `
+      Generate 10 MCQs for a ${level} student from ${board} board on topic: "${topic}".
+      Format as JSON array with "question", "options" (4 options), and "answer".
+    `;
+
+    const response = await fetch("https://api.gemini.com/v1/your-endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.GEMINI_API_KEY}`
+      },
+      body: JSON.stringify({
+        prompt,
+        max_output_tokens: 800
+      })
+    });
+
+    const data = await response.json();
+
+    let mcqs = [];
+    try {
+      mcqs = JSON.parse(data.output_text || data.text || "[]");
+    } catch (err) {
+      console.error("Gemini parse error:", err);
+      return res.status(500).json({ message: "MCQ parse failed", raw: data });
+    }
+
+    res.json({ mcqs });
+
+  } catch (err) {
+    console.error("MCQ generation error:", err);
+    res.status(500).json({ message: "MCQ generation failed" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
