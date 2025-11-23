@@ -3,55 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latest Technology News</title>
+  <title>Student News Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background: #f9f9f9; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
     .news-card { 
       background: #fff; 
       padding: 1rem; 
       margin: 1rem 0; 
-      border-radius: 0.5rem; 
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 0.75rem; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transition: transform 0.2s;
     }
-    .news-card:hover { transform: translateY(-3px); }
-    .news-card a { text-decoration: none; color: #1d4ed8; font-weight: 500; }
+    .news-card:hover { transform: translateY(-5px); }
+    .news-card a { text-decoration: none; color: #1d4ed8; font-weight: 600; }
+    .news-card img { border-radius: 0.5rem; width: 100%; max-height: 180px; object-fit: cover; margin-bottom: 0.5rem; }
+    .category-btn { 
+      flex: none; 
+      margin-right: 0.5rem; 
+      padding: 0.5rem 1.25rem; 
+      border-radius: 9999px; 
+      border: 1px solid #1d4ed8; 
+      background: white; 
+      color: #1d4ed8; 
+      cursor: pointer; 
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .category-btn.active { 
+      background: #1d4ed8; 
+      color: white; 
+    }
   </style>
 </head>
-<body class="max-w-4xl mx-auto p-4">
-  <h1 class="text-3xl font-bold mb-6 text-center">Latest Technology News</h1>
+<body class="max-w-5xl mx-auto p-4">
+
+  <h1 class="text-4xl font-bold mb-6 text-center text-blue-800">Student News Hub</h1>
+
+  <!-- Categories Slider -->
+  <div class="overflow-x-auto mb-4">
+    <div id="category-slider" class="flex space-x-2 px-2">
+      <button class="category-btn active" data-category="technology">Technology</button>
+      <button class="category-btn" data-category="science">Science</button>
+      <button class="category-btn" data-category="education">Education</button>
+      <button class="category-btn" data-category="AI">AI / ML</button>
+      <button class="category-btn" data-category="sports">Sports</button>
+      <button class="category-btn" data-category="exams">Exam Updates</button>
+      <button class="category-btn" data-category="career">Career Tips</button>
+      <button class="category-btn" data-category="scholarships">Scholarships</button>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="mb-6 flex justify-center">
+    <input type="text" id="search-input" placeholder="Search topic..." class="border p-2 rounded w-64 shadow-sm" />
+    <button id="search-btn" class="ml-2 bg-blue-600 text-white px-4 rounded hover:bg-blue-700 shadow">Search</button>
+  </div>
+
   <div id="news-container"></div>
 
   <script>
-    async function fetchNews() {
-      const RSS_URL = encodeURIComponent("https://news.google.com/rss/search?q=technology&hl=en-IN&gl=IN&ceid=IN:en");
+    let currentCategory = 'technology';
+    const categoryButtons = document.querySelectorAll('.category-btn');
+
+    async function fetchNews(topic) {
+      const category = topic || currentCategory;
+      const RSS_URL = encodeURIComponent(`https://news.google.com/rss/search?q=${category}&hl=en-IN&gl=IN&ceid=IN:en`);
       const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${RSS_URL}`;
+      const container = document.getElementById("news-container");
+      container.innerHTML = "<p class='text-gray-500 text-center'>Loading news...</p>";
 
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        const container = document.getElementById("news-container");
-        container.innerHTML = "";
 
-        data.items.slice(0, 10).forEach(item => { // Top 10 news
+        let newsItems = data.items.map(item => ({
+          title: item.title,
+          link: item.link,
+          pubDate: new Date(item.pubDate),
+          thumbnail: item.thumbnail || 'https://via.placeholder.com/400x200?text=No+Image',
+          description: item.description ? item.description.replace(/<[^>]+>/g,'').substring(0,120)+'...' : ''
+        }));
+        newsItems.sort((a,b) => b.pubDate - a.pubDate);
+
+        container.innerHTML = "";
+        newsItems.slice(0, 10).forEach(item => {
           container.innerHTML += `
             <div class="news-card">
+              <img src="${item.thumbnail}" alt="Thumbnail">
               <a href="${item.link}" target="_blank">${item.title}</a>
-              <p class="text-sm text-gray-500 mt-1">${new Date(item.pubDate).toLocaleString()}</p>
+              <p class="text-gray-600 mt-1">${item.description}</p>
+              <p class="text-sm text-gray-500 mt-1">${item.pubDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
             </div>
           `;
         });
+
       } catch (error) {
         console.error("Error fetching news:", error);
-        document.getElementById("news-container").innerHTML = "<p class='text-red-500'>Failed to load news. Try again later.</p>";
+        container.innerHTML = "<p class='text-red-500 text-center'>Failed to load news. Try again later.</p>";
       }
     }
 
+    // Initial fetch
     fetchNews();
 
-    // Optional: Auto refresh every 5 minutes
-    setInterval(fetchNews, 5 * 60 * 1000);
+    // Auto refresh every 5 minutes
+    setInterval(() => fetchNews(), 5 * 60 * 1000);
+
+    // Category button click
+    categoryButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        fetchNews();
+      });
+    });
+
+    // Search button
+    document.getElementById('search-btn').addEventListener('click', () => {
+      const searchTerm = document.getElementById('search-input').value.trim();
+      if(searchTerm) {
+        fetchNews(searchTerm);
+        categoryButtons.forEach(b => b.classList.remove('active'));
+      }
+    });
+
+    // Enter key for search
+    document.getElementById('search-input').addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') document.getElementById('search-btn').click();
+    });
   </script>
 </body>
 </html>
