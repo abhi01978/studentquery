@@ -38,9 +38,16 @@
       z-index: 9998;
     }
   </style>
+    <link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#4CAF50">
 </head>
 <body class="flex justify-center items-center min-h-screen">
-
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(() => console.log("Service Worker Registered"));
+  }
+</script>
   <!-- Overlay -->
   <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-[9998]"></div>
 
@@ -562,6 +569,7 @@
 
 </body>
 </html>
+
 
 
 
