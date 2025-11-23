@@ -245,8 +245,8 @@ app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.ht
 app.get("/profile", (req, res) => res.sendFile(path.join(__dirname, "public", "profile.html")));
 app.get("/notes.html", (req, res) => res.sendFile(path.join(__dirname, "public", "notes.html")));
 app.get("/new.html", (req, res) => res.sendFile(path.join(__dirname, "public", "new.html")));
-app.get("/login.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
+app.get("/Login.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "/Login.html"));
 });
 
 
@@ -330,6 +330,7 @@ app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
