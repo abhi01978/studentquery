@@ -170,18 +170,23 @@ app.post("/api/auth/signup", uploadImage.single("profileImg"), async (req, res) 
   }
 });
 
-app.post("/api/auth/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
-    const user = await User.findOne({ phone });
-    if (!user || !await bcrypt.compare(password, user.password))
-      return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-    const safe = user.toObject(); delete safe.password;
-    res.json({ message: "Login success", user: safe, token });
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(400).json({ message: "Wrong password" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.json({ message: "Login Success ✔", token, user });
   } catch (err) {
-    res.status(500).json({ message: "Error" });
+    res.status(500).json({ message: "Error", error: err });
   }
 });
 
@@ -330,6 +335,7 @@ app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
