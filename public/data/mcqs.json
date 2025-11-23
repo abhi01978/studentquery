@@ -30,5 +30,133 @@
     "question": "Water boils at what temperature?",
     "options": ["50°C", "100°C", "150°C", "200°C"],
     "answer": "100°C"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which device displays output?",
+    "options": ["Mouse", "Monitor", "Keyboard", "Scanner"],
+    "answer": "Monitor"
+  },
+  {
+    "topic": "math",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What is the square of 6?",
+    "options": ["12", "18", "36", "48"],
+    "answer": "36"
+  },
+  {
+    "topic": "science",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which gas do plants release during photosynthesis?",
+    "options": ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+    "answer": "Oxygen"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "CPU stands for?",
+    "options": ["Central Process Unit", "Central Processing Unit", "Control Processing Unit", "Central Power Unit"],
+    "answer": "Central Processing Unit"
+  },
+  {
+    "topic": "math",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What is 9 × 3?",
+    "options": ["18", "21", "27", "36"],
+    "answer": "27"
+  },
+  {
+    "topic": "science",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which planet is known as the Red Planet?",
+    "options": ["Earth", "Venus", "Mars", "Jupiter"],
+    "answer": "Mars"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which of these is a storage device?",
+    "options": ["RAM", "Hard Disk", "Monitor", "Mouse"],
+    "answer": "Hard Disk"
+  },
+  {
+    "topic": "math",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What is 45 ÷ 5?",
+    "options": ["5", "9", "10", "8"],
+    "answer": "9"
+  },
+  {
+    "topic": "science",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Human body needs which vitamin from sunlight?",
+    "options": ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"],
+    "answer": "Vitamin D"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which one is an operating system?",
+    "options": ["Windows", "Google", "WhatsApp", "Chrome"],
+    "answer": "Windows"
+  },
+  {
+    "topic": "math",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What is the value of Pi (approx)?",
+    "options": ["2.14", "3.14", "4.14", "5.14"],
+    "answer": "3.14"
+  },
+  {
+    "topic": "science",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which part of the plant makes food?",
+    "options": ["Root", "Stem", "Leaf", "Flower"],
+    "answer": "Leaf"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which key is used to erase characters?",
+    "options": ["Shift", "Enter", "Backspace", "Spacebar"],
+    "answer": "Backspace"
+  },
+  {
+    "topic": "math",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What is 100 − 45?",
+    "options": ["45", "55", "65", "75"],
+    "answer": "55"
+  },
+  {
+    "topic": "science",
+    "board": "CBSE",
+    "level": "School",
+    "question": "What do we breathe in to stay alive?",
+    "options": ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+    "answer": "Oxygen"
+  },
+  {
+    "topic": "computer",
+    "board": "CBSE",
+    "level": "School",
+    "question": "Which of these is used to connect the computer to the internet?",
+    "options": ["Router", "Keyboard", "Monitor", "CPU"],
+    "answer": "Router"
   }
 ]
