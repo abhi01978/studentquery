@@ -242,6 +242,8 @@ app.post("/api/notes", verifyToken, uploadPDF.single("file"), async (req, res) =
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/profile", (req, res) => res.sendFile(path.join(__dirname, "public", "profile.html")));
 app.get("/notes.html", (req, res) => res.sendFile(path.join(__dirname, "public", "notes.html")));
+app.get("/new.html", (req, res) => res.sendFile(path.join(__dirname, "public", "new.html")));
+
 
 
 // YE 2 NAYE ROUTES ADD KAR DE
@@ -295,6 +297,7 @@ app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
