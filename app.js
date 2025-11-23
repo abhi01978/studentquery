@@ -295,7 +295,6 @@ app.post("/api/follow/:userId", verifyToken, async (req, res) => {
 // -------------------------------
 // START SERVER
 // -------------------------------
-const fs = require("fs");
 
 // -------------------------------
 // JSON-based MCQs Route
@@ -327,6 +326,7 @@ app.listen(PORT, () => {
   console.log(`Server running on https://studentquery.onrender.com`);
   console.log(`Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 });
+
 
 
 
